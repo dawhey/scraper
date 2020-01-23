@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Getter
 @Builder
-public class MulticodeRequestData {
+public class MulticodeRequest {
 
     private Map<String, String> cookies;
 

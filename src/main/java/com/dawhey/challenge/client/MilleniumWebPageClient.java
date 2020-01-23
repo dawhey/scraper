@@ -1,8 +1,8 @@
 package com.dawhey.challenge.client;
 
 
-import com.dawhey.challenge.request.MulticodeRequestData;
-import com.dawhey.challenge.request.PasswordRequestData;
+import com.dawhey.challenge.request.MulticodeRequest;
+import com.dawhey.challenge.request.PasswordRequest;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,82 +15,55 @@ import java.util.Map;
 @Service
 public class MilleniumWebPageClient {
 
-    @Value("${millenium.millekod.form.parameter.name}")
-    private String millekodFormParameterName;
+    @Value("${millenium.base.url}")
+    private String milleniumBaseUrl;
 
-    @Value("${millenium.password.form.parameter.name}")
-    private String passwordFormParameterName;
-
-    @Value("${millenium.security.digits.password.form.parameter.name}")
-    private String securityDigitsPasswordFormParameterName;
-
-    @Value("${millenium.request.verification.token.name}")
-    private String verificationTokenName;
-
-    @Value("${millenium.bot.detection.client.token.name}")
-    private String botDetectionClientTokenName;
-
-    @Value("${millenium.security.digits.view.model.login.challenge.parameter.name}")
-    private String securityDigitsLoginChallengeParamName;
-
-    @Value("${user.agent}")
-    private String userAgent;
-
-    @Value("${millenium.url.welcome-page}")
-    private String milleniumBasePageUrl;
-
-    @Value("${millenium.url.multicode-request.endpoint}")
-    private String multicodeRequestEndpoint;
-
-    @Value("${millenium.url.password-request.endpoint}")
-    private String passwordRequestEndpoint;
-
-    @Value("${millenium.url.account-list.endpoint}")
-    private String accountListEndpoint;
-
-    public Connection.Response getMilleniumWelcomePage() throws IOException {
-        return Jsoup.connect(milleniumBasePageUrl + multicodeRequestEndpoint)
+    public Connection.Response getMilleniumWelcomePage() {
+        return execute(Jsoup.connect(milleniumBaseUrl + "osobiste2/Retail/Login/MulticodeRequest")
                 .method(Connection.Method.GET)
-                .userAgent(userAgent)
-                .followRedirects(true)
-                .execute();
+                .userAgent(RequestParams.USER_AGENT)
+                .followRedirects(true));
     }
 
-    public Connection.Response performMultiCodeRequest(final MulticodeRequestData requestData) throws IOException {
-        return Jsoup.connect(milleniumBasePageUrl + multicodeRequestEndpoint)
+    public Connection.Response performMultiCodeRequest(MulticodeRequest requestData) {
+        return execute(Jsoup.connect(milleniumBaseUrl + "osobiste2/Retail/Login/MulticodeRequest")
                 .method(Connection.Method.POST)
-                .userAgent(userAgent)
+                .userAgent(RequestParams.USER_AGENT)
                 .cookies(requestData.getCookies())
-                .data(millekodFormParameterName, String.valueOf(requestData.getMillekod()))
-                .data(verificationTokenName, requestData.getVerificationTokenValue())
-                .followRedirects(true)
-                .execute();
+                .data("Millekod", String.valueOf(requestData.getMillekod()))
+                .data(RequestParams.VERIFICATION_TOKEN_PARAM, requestData.getVerificationTokenValue())
+                .followRedirects(true));
     }
 
-    public Connection.Response performPasswordRequest(final PasswordRequestData requestData) throws IOException {
-        return Jsoup.connect(milleniumBasePageUrl + passwordRequestEndpoint)
+    public Connection.Response performPasswordRequest(PasswordRequest requestData) {
+        return execute(Jsoup.connect(milleniumBaseUrl + "osobiste2/Retail/Login/PasswordOneRequest")
                 .method(Connection.Method.POST)
-                .userAgent(userAgent)
+                .userAgent(RequestParams.USER_AGENT)
                 .cookies(requestData.getCookies())
                 .data(passwordRequestFormStaticData())
                 .data(requestData.getPeselFormData())
-                .data(passwordFormParameterName, String.valueOf(requestData.getPassword()))
-                .data(botDetectionClientTokenName, requestData.getBotDetectionClientToken())
-                .data(verificationTokenName, requestData.getRequestVerificationToken())
-                .data(securityDigitsLoginChallengeParamName, requestData.getSecurityDigitsLoginChallengeToken())
-                .data(securityDigitsPasswordFormParameterName, requestData.getSecurityDigitsPassword())
-                .followRedirects(true)
-                .execute();
+                .data("PasswordOne", String.valueOf(requestData.getPassword()))
+                .data(RequestParams.BOT_DETECTION_TOKEN_PARAM, requestData.getBotDetectionClientToken())
+                .data(RequestParams.VERIFICATION_TOKEN_PARAM, requestData.getRequestVerificationToken())
+                .data(RequestParams.LOGIN_CHALLENGE_PARAM, requestData.getSecurityDigitsLoginChallengeToken())
+                .data("SecurityDigitsViewModel.LoginPassword", requestData.getSecurityDigitsPassword())
+                .followRedirects(true));
     }
 
-    public Connection.Response getAccountListPage(final Connection.Response response, final Map<String, String> cookies) throws IOException {
-        cookies.putAll(response.cookies());
-        return Jsoup.connect(milleniumBasePageUrl + accountListEndpoint)
+    public Connection.Response getAccountListPage(Map<String, String> cookies) {
+        return execute(Jsoup.connect(milleniumBaseUrl + "osobiste2/Accounts/CurrentAccountsList/List")
                 .method(Connection.Method.GET)
-                .userAgent(userAgent)
+                .userAgent(RequestParams.USER_AGENT)
                 .cookies(cookies)
-                .followRedirects(true)
-                .execute();
+                .followRedirects(true));
+    }
+
+    private Connection.Response execute(Connection connection) {
+        try {
+            return connection.execute();
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to execute connection to url: " + connection.request().url(), e);
+        }
     }
 
     private Map<String, String> passwordRequestFormStaticData() {

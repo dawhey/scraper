@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.dawhey</groupId>
-    <artifactId>challenge</artifactId>
+    <artifactId>scraper</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>challenge</name>
-    <description>Kontomatik coding challenge</description>
+    <name>scraper</name>
+    <description>Scraper challenge application</description>
 
     <properties>
         <java.version>11</java.version>

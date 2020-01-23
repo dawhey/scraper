@@ -1,52 +1,40 @@
 package com.dawhey.challenge.service;
 
-import com.dawhey.challenge.command.AccountPageCommand;
-import com.dawhey.challenge.command.MulticodeRequestCommand;
-import com.dawhey.challenge.command.PasswordRequestCommand;
-import com.dawhey.challenge.command.WelcomePageCommand;
+import com.dawhey.challenge.step.AccountPageStep;
+import com.dawhey.challenge.step.MulticodeRequestStep;
+import com.dawhey.challenge.step.PasswordRequestStep;
+import com.dawhey.challenge.step.WelcomePageStep;
 import com.dawhey.challenge.model.Account;
-import com.dawhey.challenge.wrapper.AccountPageCommandDataWrapper;
-import com.dawhey.challenge.wrapper.MulticodeRequestCommandDataWrapper;
-import com.dawhey.challenge.wrapper.PasswordRequestCommandDataWrapper;
+import com.dawhey.challenge.model.Credentials;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class ScrapingService {
 
-    private final ResponseValidatingService validatingService;
+    private WelcomePageStep welcomePageStep;
 
-    private final WelcomePageCommand welcomePageCommand;
+    private MulticodeRequestStep multicodeRequestStep;
 
-    private final MulticodeRequestCommand multicodeRequestCommand;
+    private PasswordRequestStep passwordRequestStep;
 
-    private final PasswordRequestCommand passwordRequestCommand;
+    private AccountPageStep accountPageStep;
 
-    private final AccountPageCommand accountPageCommand;
-
-    public ScrapingService(final ResponseValidatingService validatingService,
-                           final WelcomePageCommand welcomePageCommand,
-                           final MulticodeRequestCommand multicodeRequestCommand,
-                           final PasswordRequestCommand passwordRequestCommand,
-                           final AccountPageCommand accountPageCommand) {
-        this.validatingService = validatingService;
-        this.welcomePageCommand = welcomePageCommand;
-        this.multicodeRequestCommand = multicodeRequestCommand;
-        this.passwordRequestCommand = passwordRequestCommand;
-        this.accountPageCommand = accountPageCommand;
+    public ScrapingService(WelcomePageStep welcomePageStep,
+                           MulticodeRequestStep multicodeRequestStep,
+                           PasswordRequestStep passwordRequestStep,
+                           AccountPageStep accountPageStep) {
+        this.welcomePageStep = welcomePageStep;
+        this.multicodeRequestStep = multicodeRequestStep;
+        this.passwordRequestStep = passwordRequestStep;
+        this.accountPageStep = accountPageStep;
     }
 
-    public Set<Account> scrapBankPageForAccountDetails(final char[] millekod, final char[] pesel, final char[] password) throws Exception {
-        var response = welcomePageCommand.execute(Optional.empty());
-        final Map<String, String> welcomePageCookies = response.cookies();
-
-        response = multicodeRequestCommand.execute(new MulticodeRequestCommandDataWrapper(response, millekod));
-        validatingService.validateMulticodeRequestResponse(response);
-        response = passwordRequestCommand.execute(new PasswordRequestCommandDataWrapper(response, welcomePageCookies, pesel, password));
-        validatingService.validatePasswordRequestResponse(response);
-        return accountPageCommand.execute(new AccountPageCommandDataWrapper(welcomePageCookies, response));
+    public Set<Account> scrapeBankPageForAccountDetails(Credentials credentials) {
+        var welcomePageStepResultSession = welcomePageStep.execute();
+        var multicodeRequestStepResultSession = multicodeRequestStep.execute(welcomePageStepResultSession ,credentials.getMillekod());
+        var passwordRequestStepResultSession = passwordRequestStep.execute(multicodeRequestStepResultSession, credentials.getPesel(), credentials.getPassword());
+        return accountPageStep.execute(passwordRequestStepResultSession);
     }
 }

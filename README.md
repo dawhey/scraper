@@ -4,3 +4,14 @@
 - GUI-less
 - For HTML parsing `jsoup` library used
 - No headless browser used
+
+#### Providing credentials:
+-  Providing credentials to your `Millenet` account is needed. Pass the credentials on startup, using following parameters: 
+`-Dmillenium.millekod=YOUR_LOGIN`  
+`-Dmillenium.password=YOUR_PASSWORD` 
+`-Dmillenium.pesel=YOUR_PESEL`.  Alternatively you can provide your credentials in the source code, since they are stored within `application.properties` file. 
+
+#### Running the project:
+- Generate .jar file using `mvn package`
+- Start the application using `java -jar scraper.jar -Dmillenium.millekod=YOUR_LOGIN -Dmillenium.password=YOUR_PASSWORD  -Dmillenium.pesel=YOUR_PESEL`
+- Application is using the port `7778`

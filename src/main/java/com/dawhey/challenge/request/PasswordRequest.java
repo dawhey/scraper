@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Getter
 @Builder
-public class PasswordRequestData {
+public class PasswordRequest {
 
     private Map<String, String> peselFormData;
 
