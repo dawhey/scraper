@@ -1,6 +1,7 @@
 package com.dawhey.challenge.request;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import org.apache.logging.log4j.util.Strings;
 
@@ -8,6 +9,7 @@ import java.util.Map;
 
 @Getter
 @Builder
+@Data
 public class PasswordRequest {
 
     private Map<String, String> peselFormData;

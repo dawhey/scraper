@@ -1,22 +1,16 @@
 package com.dawhey.challenge.util;
 
-import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.IOException;
 import java.util.List;
 
 public class DocumentHandler {
 
     private Document document;
 
-    public DocumentHandler(Connection.Response response) {
-        try {
-            this.document = response.parse();
-        } catch (IOException e) {
-            throw new RuntimeException("Error during parsing response to HTML document object.", e);
-        }
+    public DocumentHandler(Document document) {
+        this.document = document;
     }
 
     public String findValueOfInputByName(String inputName) {

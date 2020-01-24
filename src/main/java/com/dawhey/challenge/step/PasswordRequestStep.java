@@ -6,9 +6,11 @@ import com.dawhey.challenge.request.PasswordRequest;
 import com.dawhey.challenge.step.result.MulticodeRequestStepResultSession;
 import com.dawhey.challenge.step.result.PasswordRequestStepResultSession;
 import com.dawhey.challenge.util.DocumentHandler;
+import com.dawhey.challenge.util.DocumentParser;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,27 +25,29 @@ public class PasswordRequestStep {
 
     private MilleniumWebPageClient milleniumWebPageClient;
 
+    private DocumentParser documentParser = new DocumentParser();
+
     public PasswordRequestStep(MilleniumWebPageClient milleniumWebPageClient) {
         this.milleniumWebPageClient = milleniumWebPageClient;
     }
 
     public PasswordRequestStepResultSession execute(MulticodeRequestStepResultSession session, char[] pesel, char[] password) {
-        PasswordRequest requestData = buildRequestData(session, pesel, password);
-        var response = milleniumWebPageClient.performPasswordRequest(requestData);
+        var request = buildRequestData(session, pesel, password);
+        var response = milleniumWebPageClient.performPasswordRequest(request);
         session.setMostRecentResponse(response);
         session.getCookies().putAll(response.cookies());
         return new PasswordRequestStepResultSession(session);
     }
 
     private PasswordRequest buildRequestData(MulticodeRequestStepResultSession session, char[] pesel, char[] password) {
-        DocumentHandler documentHandler = new DocumentHandler(session.getMostRecentResponse());
+        var documentHandler = new DocumentHandler(documentParser.parseFrom(session.getMostRecentResponse()));
 
         return PasswordRequest.builder()
                 .peselFormData(getPeselInputFormDataMap(documentHandler.findElementsBySelector("input[name~=PESEL*]"), pesel))
                 .botDetectionClientToken(documentHandler.findValueOfInputByName(RequestParams.BOT_DETECTION_TOKEN_PARAM))
                 .requestVerificationToken(documentHandler.findValueOfInputByName(RequestParams.VERIFICATION_TOKEN_PARAM))
                 .securityDigitsLoginChallengeToken(documentHandler.findValueOfInputByName(RequestParams.LOGIN_CHALLENGE_PARAM))
-                .cookies(session.getCookies())
+                .cookies(new HashMap<>(session.getCookies()))
                 .password(password)
                 .build();
     }
