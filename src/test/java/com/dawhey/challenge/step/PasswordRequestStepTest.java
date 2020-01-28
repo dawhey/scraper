@@ -4,7 +4,7 @@ import com.dawhey.challenge.client.MilleniumWebPageClient;
 import com.dawhey.challenge.request.PasswordRequest;
 import com.dawhey.challenge.step.result.MulticodeRequestStepResultSession;
 import com.dawhey.challenge.step.result.Session;
-import com.dawhey.challenge.util.DocumentParser;
+import com.dawhey.challenge.util.ResponseParser;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +34,7 @@ class PasswordRequestStepTest {
     private MilleniumWebPageClient milleniumWebPageClient;
 
     @Mock
-    private DocumentParser documentParser;
+    private ResponseParser responseParser;
 
     @BeforeEach
     public void setUp() {
@@ -47,7 +47,7 @@ class PasswordRequestStepTest {
         var responseMock = mock(Connection.Response.class);
         when(responseMock.cookies()).thenReturn(signInCookies());
         when(milleniumWebPageClient.performPasswordRequest(any())).thenReturn(responseMock);
-        when(documentParser.parseFrom(any())).thenReturn(Jsoup.parse(PASSWORD_STEP_HTML));
+        when(responseParser.parse(any())).thenReturn(Jsoup.parse(PASSWORD_STEP_HTML));
 
         //when
         var result = underTest.execute(new MulticodeRequestStepResultSession(new Session(welcomePageCookies(), any())), PESEL, PASSWORD);

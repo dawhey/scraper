@@ -4,7 +4,7 @@ import com.dawhey.challenge.client.MilleniumWebPageClient;
 import com.dawhey.challenge.model.Account;
 import com.dawhey.challenge.step.result.PasswordRequestStepResultSession;
 import com.dawhey.challenge.step.result.Session;
-import com.dawhey.challenge.util.DocumentParser;
+import com.dawhey.challenge.util.ResponseParser;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ import static com.dawhey.challenge.util.TestUtil.*;
 class AccountPageStepTest {
 
     @Mock
-    private DocumentParser documentParser;
+    private ResponseParser responseParser;
 
     @Mock
     private MilleniumWebPageClient webPageClient;
@@ -42,7 +42,7 @@ class AccountPageStepTest {
     @Test
     public void shouldConvertToAccountSet_whenProvidedWithCorrectHtml() {
         //given
-        when(documentParser.parseFrom(any())).thenReturn(Jsoup.parse(ACCOUNT_PAGE_STEP_HTML));
+        when(responseParser.parse(any())).thenReturn(Jsoup.parse(ACCOUNT_PAGE_STEP_HTML));
 
         //when
         var accounts = underTest.execute(session());

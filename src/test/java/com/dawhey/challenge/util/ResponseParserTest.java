@@ -8,15 +8,15 @@ import java.io.IOException;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class DocumentParserTest {
+class ResponseParserTest {
 
-    private DocumentParser underTest;
+    private ResponseParser underTest;
 
     @Test
     void shouldThrowRuntimeException_whenIOExceptionIsThrown() throws IOException {
         var response = mock(Connection.Response.class);
         when(response.parse()).thenThrow(new IOException());
 
-        assertThrows(RuntimeException.class, () -> underTest.parseFrom(response));
+        assertThrows(RuntimeException.class, () -> underTest.parse(response));
     }
 }

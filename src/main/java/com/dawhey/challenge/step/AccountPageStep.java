@@ -3,8 +3,8 @@ package com.dawhey.challenge.step;
 import com.dawhey.challenge.client.MilleniumWebPageClient;
 import com.dawhey.challenge.model.Account;
 import com.dawhey.challenge.step.result.PasswordRequestStepResultSession;
-import com.dawhey.challenge.util.DocumentHandler;
 import com.dawhey.challenge.util.DocumentParser;
+import com.dawhey.challenge.util.ResponseParser;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class AccountPageStep {
 
     private MilleniumWebPageClient milleniumWebPageClient;
 
-    private DocumentParser documentParser = new DocumentParser();
+    private ResponseParser responseParser = new ResponseParser();
 
     public AccountPageStep(MilleniumWebPageClient milleniumWebPageClient) {
         this.milleniumWebPageClient = milleniumWebPageClient;
@@ -26,8 +26,8 @@ public class AccountPageStep {
 
     public Set<Account> execute(PasswordRequestStepResultSession session) {
         Connection.Response response = milleniumWebPageClient.getAccountListPage(session.getCookies());
-        DocumentHandler documentHandler = new DocumentHandler(documentParser.parseFrom(response));
-        List<Element> accountTableRows = findAccountBlockElements(documentHandler);
+        DocumentParser documentParser = new DocumentParser(responseParser, response);
+        List<Element> accountTableRows = findAccountBlockElements(documentParser);
 
         return convertToAccounts(accountTableRows);
     }
@@ -45,7 +45,7 @@ public class AccountPageStep {
                 }).collect(Collectors.toSet());
     }
 
-    private List<Element> findAccountBlockElements(DocumentHandler documentHandler) {
-        return documentHandler.findElementsByClass("RowEven");
+    private List<Element> findAccountBlockElements(DocumentParser documentParser) {
+        return documentParser.findElementsByClass("RowEven");
     }
 }

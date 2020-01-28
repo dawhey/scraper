@@ -5,8 +5,8 @@ import com.dawhey.challenge.client.RequestParams;
 import com.dawhey.challenge.request.MulticodeRequest;
 import com.dawhey.challenge.step.result.MulticodeRequestStepResultSession;
 import com.dawhey.challenge.step.result.WelcomePageStepResultSession;
-import com.dawhey.challenge.util.DocumentHandler;
 import com.dawhey.challenge.util.DocumentParser;
+import com.dawhey.challenge.util.ResponseParser;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -16,14 +16,14 @@ public class MulticodeRequestStep {
 
     private MilleniumWebPageClient milleniumWebPageClient;
 
-    private DocumentParser documentParser = new DocumentParser();
+    private ResponseParser responseParser = new ResponseParser();
 
     public MulticodeRequestStep(MilleniumWebPageClient milleniumWebPageClient) {
         this.milleniumWebPageClient = milleniumWebPageClient;
     }
 
     public MulticodeRequestStepResultSession execute(WelcomePageStepResultSession session, char[] millekod) {
-        var requestVerificationTokenValue = new DocumentHandler(documentParser.parseFrom(session.getMostRecentResponse()))
+        var requestVerificationTokenValue = new DocumentParser(responseParser, session.getMostRecentResponse())
                 .findValueOfInputByName(RequestParams.VERIFICATION_TOKEN_PARAM);
 
         var requestData = buildRequestData(session.getCookies(), requestVerificationTokenValue, millekod);

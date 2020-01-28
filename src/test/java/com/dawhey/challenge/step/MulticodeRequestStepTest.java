@@ -3,7 +3,7 @@ package com.dawhey.challenge.step;
 import com.dawhey.challenge.client.MilleniumWebPageClient;
 import com.dawhey.challenge.request.MulticodeRequest;
 import com.dawhey.challenge.step.result.WelcomePageStepResultSession;
-import com.dawhey.challenge.util.DocumentParser;
+import com.dawhey.challenge.util.ResponseParser;
 import com.dawhey.challenge.util.TestUtil;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ class MulticodeRequestStepTest {
     private MilleniumWebPageClient milleniumWebPageClient;
 
     @Mock
-    private DocumentParser documentParser;
+    private ResponseParser responseParser;
 
     @BeforeEach
     public void setUp() {
@@ -41,7 +41,7 @@ class MulticodeRequestStepTest {
     @Test
     public void shouldPerformCorrectRequest_whenExecuted() {
         //given
-        when(documentParser.parseFrom(any())).thenReturn(Jsoup.parse(MULTICODE_STEP_HTML));
+        when(responseParser.parse(any())).thenReturn(Jsoup.parse(MULTICODE_STEP_HTML));
 
         //when
         underTest.execute(new WelcomePageStepResultSession(TestUtil.welcomePageCookies(), any()), MILLEKOD);

@@ -5,8 +5,8 @@ import com.dawhey.challenge.client.RequestParams;
 import com.dawhey.challenge.request.PasswordRequest;
 import com.dawhey.challenge.step.result.MulticodeRequestStepResultSession;
 import com.dawhey.challenge.step.result.PasswordRequestStepResultSession;
-import com.dawhey.challenge.util.DocumentHandler;
 import com.dawhey.challenge.util.DocumentParser;
+import com.dawhey.challenge.util.ResponseParser;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +25,7 @@ public class PasswordRequestStep {
 
     private MilleniumWebPageClient milleniumWebPageClient;
 
-    private DocumentParser documentParser = new DocumentParser();
+    private ResponseParser responseParser = new ResponseParser();
 
     public PasswordRequestStep(MilleniumWebPageClient milleniumWebPageClient) {
         this.milleniumWebPageClient = milleniumWebPageClient;
@@ -40,7 +40,7 @@ public class PasswordRequestStep {
     }
 
     private PasswordRequest buildRequestData(MulticodeRequestStepResultSession session, char[] pesel, char[] password) {
-        var documentHandler = new DocumentHandler(documentParser.parseFrom(session.getMostRecentResponse()));
+        var documentHandler = new DocumentParser(responseParser, session.getMostRecentResponse());
 
         return PasswordRequest.builder()
                 .peselFormData(getPeselInputFormDataMap(documentHandler.findElementsBySelector("input[name~=PESEL*]"), pesel))

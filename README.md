@@ -13,5 +13,4 @@
 
 #### Running the project:
 - Generate .jar file using `mvn package`
-- Start the application using `java -jar scraper.jar -Dmillenium.millekod=YOUR_LOGIN -Dmillenium.password=YOUR_PASSWORD  -Dmillenium.pesel=YOUR_PESEL`
-- Application is using the port `7778`
+- Start the application using `java -jar scraper-1.0.jar -Dmillenium.millekod=YOUR_LOGIN -Dmillenium.password=YOUR_PASSWORD  -Dmillenium.pesel=YOUR_PESEL`

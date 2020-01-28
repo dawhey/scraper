@@ -14,7 +14,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.dawhey.challenge.util.TestUtil.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -47,8 +46,8 @@ class ScrapingServiceTest {
         underTest.scrapeBankPageForAccountDetails(new Credentials(MILLEKOD, PASSWORD, PESEL));
 
         inOrder.verify(welcomePageStep).execute();
-        inOrder.verify(multicodeRequestStep).execute(any(), any());
-        inOrder.verify(passwordRequestStep).execute(any(), any(), any());
+        inOrder.verify(multicodeRequestStep).execute(any(), eq(MILLEKOD));
+        inOrder.verify(passwordRequestStep).execute(any(), eq(PESEL), eq(PASSWORD));
         inOrder.verify(accountPageStep).execute(any());
     }
 
