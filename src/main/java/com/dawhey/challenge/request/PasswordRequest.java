@@ -1,28 +1,25 @@
 package com.dawhey.challenge.request;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.Map;
 
-@Getter
-@Builder
-@Data
+@EqualsAndHashCode
+@AllArgsConstructor
 public class PasswordRequest {
 
-    private Map<String, String> peselFormData;
+    public final Map<String, String> peselFormData;
 
-    private String requestVerificationToken;
+    public final String requestVerificationToken;
 
-    private String botDetectionClientToken;
+    public final String botDetectionClientToken;
 
-    private String securityDigitsLoginChallengeToken;
+    public final String securityDigitsLoginChallengeToken;
 
-    private Map<String, String> cookies;
+    public final Map<String, String> cookies;
 
-    private char[] password;
+    public final char[] password;
 
     public String getSecurityDigitsPassword() {
         return String.join(Strings.EMPTY, peselFormData.values());

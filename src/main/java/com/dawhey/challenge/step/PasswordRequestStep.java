@@ -42,14 +42,13 @@ public class PasswordRequestStep {
     private PasswordRequest buildRequestData(MulticodeRequestStepResultSession session, char[] pesel, char[] password) {
         var documentHandler = new DocumentParser(responseParser, session.getMostRecentResponse());
 
-        return PasswordRequest.builder()
-                .peselFormData(getPeselInputFormDataMap(documentHandler.findElementsBySelector("input[name~=PESEL*]"), pesel))
-                .botDetectionClientToken(documentHandler.findValueOfInputByName(RequestParams.BOT_DETECTION_TOKEN_PARAM))
-                .requestVerificationToken(documentHandler.findValueOfInputByName(RequestParams.VERIFICATION_TOKEN_PARAM))
-                .securityDigitsLoginChallengeToken(documentHandler.findValueOfInputByName(RequestParams.LOGIN_CHALLENGE_PARAM))
-                .cookies(new HashMap<>(session.getCookies()))
-                .password(password)
-                .build();
+        return new PasswordRequest(
+                getPeselInputFormDataMap(documentHandler.findElementsBySelector("input[name~=PESEL*]"), pesel),
+                documentHandler.findValueOfInputByName(RequestParams.VERIFICATION_TOKEN_PARAM),
+                documentHandler.findValueOfInputByName(RequestParams.BOT_DETECTION_TOKEN_PARAM),
+                documentHandler.findValueOfInputByName(RequestParams.LOGIN_CHALLENGE_PARAM),
+                new HashMap<>(session.getCookies()),
+                password);
     }
 
     /**

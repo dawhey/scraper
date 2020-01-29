@@ -51,10 +51,6 @@ class MulticodeRequestStepTest {
     }
 
     private MulticodeRequest multicodeRequest() {
-        return MulticodeRequest.builder()
-                .cookies(TestUtil.welcomePageCookies())
-                .millekod(MILLEKOD)
-                .verificationTokenValue(REQUEST_VERIFICATION_TOKEN)
-                .build();
+        return new MulticodeRequest(TestUtil.welcomePageCookies(), REQUEST_VERIFICATION_TOKEN, MILLEKOD);
     }
 }

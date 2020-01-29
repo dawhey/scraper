@@ -1,19 +1,16 @@
 package com.dawhey.challenge.request;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.Map;
 
-@Getter
-@Builder
-@Data
+@EqualsAndHashCode
+@AllArgsConstructor
 public class MulticodeRequest {
 
-    private Map<String, String> cookies;
+    public final Map<String, String> cookies;
 
-    private String verificationTokenValue;
+    public final String verificationTokenValue;
 
-    private char[] millekod;
+    public final char[] millekod;
 }

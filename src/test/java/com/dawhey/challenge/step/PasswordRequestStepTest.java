@@ -64,13 +64,12 @@ class PasswordRequestStepTest {
            put("PESEL_10", "1");
         }};
 
-        return PasswordRequest.builder()
-                .botDetectionClientToken(BOT_DETECTION_CLIENT_TOKEN)
-                .cookies(welcomePageCookies())
-                .requestVerificationToken(REQUEST_VERIFICATION_TOKEN)
-                .securityDigitsLoginChallengeToken(SECURITY_DIGITS_LOGIN_CHALLENGE)
-                .password(PASSWORD)
-                .peselFormData(peselFormData)
-                .build();
+        return new PasswordRequest(
+                peselFormData,
+                REQUEST_VERIFICATION_TOKEN,
+                BOT_DETECTION_CLIENT_TOKEN,
+                SECURITY_DIGITS_LOGIN_CHALLENGE,
+                welcomePageCookies(),
+                PASSWORD);
     }
 }

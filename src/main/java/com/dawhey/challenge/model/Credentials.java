@@ -1,15 +1,15 @@
 package com.dawhey.challenge.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.EqualsAndHashCode;
 
-@Getter
+@EqualsAndHashCode
 @AllArgsConstructor
 public class Credentials {
 
-    private char[] millekod;
+    public final char[] millekod;
 
-    private char[] password;
+    public final char[] password;
 
-    private char[] pesel;
+    public final char[] pesel;
 }

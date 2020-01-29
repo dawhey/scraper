@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DocumentParser {
 
-    private Document document;
+    private final Document document;
 
     public DocumentParser(ResponseParser parser, Connection.Response response) {
         this.document = parser.parse(response);

@@ -13,13 +13,13 @@ import java.util.Set;
 @Service
 public class ScrapingService {
 
-    private WelcomePageStep welcomePageStep;
+    private final WelcomePageStep welcomePageStep;
 
-    private MulticodeRequestStep multicodeRequestStep;
+    private final MulticodeRequestStep multicodeRequestStep;
 
-    private PasswordRequestStep passwordRequestStep;
+    private final PasswordRequestStep passwordRequestStep;
 
-    private AccountPageStep accountPageStep;
+    private final AccountPageStep accountPageStep;
 
     public ScrapingService(WelcomePageStep welcomePageStep,
                            MulticodeRequestStep multicodeRequestStep,
@@ -33,8 +33,8 @@ public class ScrapingService {
 
     public Set<Account> scrapeBankPageForAccountDetails(Credentials credentials) {
         var welcomePageStepResultSession = welcomePageStep.execute();
-        var multicodeRequestStepResultSession = multicodeRequestStep.execute(welcomePageStepResultSession ,credentials.getMillekod());
-        var passwordRequestStepResultSession = passwordRequestStep.execute(multicodeRequestStepResultSession, credentials.getPesel(), credentials.getPassword());
+        var multicodeRequestStepResultSession = multicodeRequestStep.execute(welcomePageStepResultSession ,credentials.millekod);
+        var passwordRequestStepResultSession = passwordRequestStep.execute(multicodeRequestStepResultSession, credentials.pesel, credentials.password);
         return accountPageStep.execute(passwordRequestStepResultSession);
     }
 }

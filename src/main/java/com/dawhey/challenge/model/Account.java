@@ -1,13 +1,13 @@
 package com.dawhey.challenge.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@Data
+@EqualsAndHashCode
 @AllArgsConstructor
 public class Account {
 
-    private String name;
+    public final String name;
 
-    private String balance;
+    public final String balance;
 }

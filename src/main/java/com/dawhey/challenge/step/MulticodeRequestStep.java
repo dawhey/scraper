@@ -9,8 +9,6 @@ import com.dawhey.challenge.util.DocumentParser;
 import com.dawhey.challenge.util.ResponseParser;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-
 @Component
 public class MulticodeRequestStep {
 
@@ -26,16 +24,8 @@ public class MulticodeRequestStep {
         var requestVerificationTokenValue = new DocumentParser(responseParser, session.getMostRecentResponse())
                 .findValueOfInputByName(RequestParams.VERIFICATION_TOKEN_PARAM);
 
-        var requestData = buildRequestData(session.getCookies(), requestVerificationTokenValue, millekod);
+        var requestData = new MulticodeRequest(session.getCookies(), requestVerificationTokenValue, millekod);
         session.setMostRecentResponse(milleniumWebPageClient.performMultiCodeRequest(requestData));
         return new MulticodeRequestStepResultSession(session);
-    }
-
-    private MulticodeRequest buildRequestData(Map<String, String> cookies, String requestVerificationToken, char[] millekod) {
-        return MulticodeRequest.builder()
-                .cookies(cookies)
-                .verificationTokenValue(requestVerificationToken)
-                .millekod(millekod)
-                .build();
     }
 }

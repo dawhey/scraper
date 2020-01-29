@@ -29,9 +29,9 @@ public class MilleniumWebPageClient {
         return execute(Jsoup.connect(milleniumBaseUrl + "osobiste2/Retail/Login/MulticodeRequest")
                 .method(Connection.Method.POST)
                 .userAgent(RequestParams.USER_AGENT)
-                .cookies(requestData.getCookies())
-                .data("Millekod", String.valueOf(requestData.getMillekod()))
-                .data(RequestParams.VERIFICATION_TOKEN_PARAM, requestData.getVerificationTokenValue())
+                .cookies(requestData.cookies)
+                .data("Millekod", String.valueOf(requestData.millekod))
+                .data(RequestParams.VERIFICATION_TOKEN_PARAM, requestData.verificationTokenValue)
                 .followRedirects(true));
     }
 
@@ -39,13 +39,13 @@ public class MilleniumWebPageClient {
         return execute(Jsoup.connect(milleniumBaseUrl + "osobiste2/Retail/Login/PasswordOneRequest")
                 .method(Connection.Method.POST)
                 .userAgent(RequestParams.USER_AGENT)
-                .cookies(requestData.getCookies())
+                .cookies(requestData.cookies)
                 .data(passwordRequestFormStaticData())
-                .data(requestData.getPeselFormData())
-                .data("PasswordOne", String.valueOf(requestData.getPassword()))
-                .data(RequestParams.BOT_DETECTION_TOKEN_PARAM, requestData.getBotDetectionClientToken())
-                .data(RequestParams.VERIFICATION_TOKEN_PARAM, requestData.getRequestVerificationToken())
-                .data(RequestParams.LOGIN_CHALLENGE_PARAM, requestData.getSecurityDigitsLoginChallengeToken())
+                .data(requestData.peselFormData)
+                .data("PasswordOne", String.valueOf(requestData.password))
+                .data(RequestParams.BOT_DETECTION_TOKEN_PARAM, requestData.botDetectionClientToken)
+                .data(RequestParams.VERIFICATION_TOKEN_PARAM, requestData.requestVerificationToken)
+                .data(RequestParams.LOGIN_CHALLENGE_PARAM, requestData.securityDigitsLoginChallengeToken)
                 .data("SecurityDigitsViewModel.LoginPassword", requestData.getSecurityDigitsPassword())
                 .followRedirects(true));
     }

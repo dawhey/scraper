@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.dawhey.challenge.util.TestUtil.*;
@@ -20,7 +19,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 class ScrapingServiceTest {
 
-    @InjectMocks
     private ScrapingService underTest;
 
     @Mock
@@ -37,7 +35,7 @@ class ScrapingServiceTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        underTest = new ScrapingService(welcomePageStep, multicodeRequestStep, passwordRequestStep, accountPageStep);
     }
 
     @Test
