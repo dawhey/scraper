@@ -1,7 +1,7 @@
 package com.dawhey.challenge.step;
 
 import com.dawhey.challenge.client.MilleniumWebPageClient;
-import com.dawhey.challenge.step.result.WelcomePageStepResultSession;
+import com.dawhey.challenge.step.output.WelcomePageStepResultOutput;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,8 +13,8 @@ public class WelcomePageStep {
         this.milleniumWebPageClient = milleniumWebPageClient;
     }
 
-    public WelcomePageStepResultSession execute() {
+    public WelcomePageStepResultOutput execute() {
         var response = milleniumWebPageClient.getMilleniumWelcomePage();
-        return new WelcomePageStepResultSession(response.cookies(), response);
+        return new WelcomePageStepResultOutput(response);
     }
 }

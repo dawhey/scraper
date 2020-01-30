@@ -1,4 +1,4 @@
-package com.dawhey.challenge.step.result;
+package com.dawhey.challenge.step.output;
 
 import lombok.AllArgsConstructor;
 import org.jsoup.Connection;

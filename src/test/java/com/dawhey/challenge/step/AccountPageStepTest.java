@@ -1,10 +1,13 @@
 package com.dawhey.challenge.step;
 
 import com.dawhey.challenge.client.MilleniumWebPageClient;
+import com.dawhey.challenge.client.RequestParams;
+import com.dawhey.challenge.exception.InvalidCredentialsException;
 import com.dawhey.challenge.model.Account;
-import com.dawhey.challenge.step.result.PasswordRequestStepResultSession;
-import com.dawhey.challenge.step.result.Session;
+import com.dawhey.challenge.step.output.PasswordRequestStepOutput;
+import com.dawhey.challenge.step.output.Session;
 import com.dawhey.challenge.util.ResponseParser;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,14 +16,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-;
-import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
 import static com.dawhey.challenge.util.TestUtil.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 class AccountPageStepTest {
@@ -40,12 +42,14 @@ class AccountPageStepTest {
     }
 
     @Test
-    public void shouldConvertToAccountSet_whenProvidedWithCorrectHtml() {
+    public void shouldConvertToAccountSet_whenProvidedWithCorrectHtml() throws MalformedURLException {
         //given
+        var response = mock(Connection.Response.class);
+        when(response.url()).thenReturn(new URL(RequestParams.MILLENIUM_BASE_URL + "osobiste/"));
         when(responseParser.parse(any())).thenReturn(Jsoup.parse(ACCOUNT_PAGE_STEP_HTML));
 
         //when
-        var accounts = underTest.execute(session());
+        var accounts = underTest.execute(new PasswordRequestStepOutput(response), new Session(null));
 
         //then
         assertEquals(2, accounts.size());
@@ -53,11 +57,13 @@ class AccountPageStepTest {
         assertTrue(accounts.contains(new Account(ACCOUNT_2_NAME, ACCOUNT_2_BALANCE)));
     }
 
-    private PasswordRequestStepResultSession session() {
-        return new PasswordRequestStepResultSession(new Session(new HashMap<>(), any()));
+    @Test
+    public void shouldThrowInvalidCredentialsException_whenFailedToLogin() throws MalformedURLException {
+        //given
+        var response = mock(Connection.Response.class);
+        when(response.url()).thenReturn(new URL(RequestParams.MILLENIUM_BASE_URL + "error/"));
+
+        //then
+        assertThrows(InvalidCredentialsException.class, () -> underTest.execute(new PasswordRequestStepOutput(response), new Session(null)));
     }
-
-
-
-
 }

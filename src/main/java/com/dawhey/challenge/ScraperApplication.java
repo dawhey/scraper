@@ -11,7 +11,7 @@ public class ScraperApplication {
     public static void main(String[] args) {
         var context = SpringApplication.run(ScraperApplication.class, args);
         var scrapingService = context.getBean(ScrapingService.class);
-        var credentials = new SpringPropertiesCredentialsProvider().getFrom(context);
+        var credentials = new SpringPropertiesCredentialsProvider().getFrom(context.getEnvironment());
 
         var accounts = scrapingService.scrapeBankPageForAccountDetails(credentials);
         System.out.println("Accounts list: " + accounts);

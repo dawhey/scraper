@@ -5,10 +5,13 @@ import com.dawhey.challenge.step.AccountPageStep;
 import com.dawhey.challenge.step.MulticodeRequestStep;
 import com.dawhey.challenge.step.PasswordRequestStep;
 import com.dawhey.challenge.step.WelcomePageStep;
+import com.dawhey.challenge.step.output.MulticodeRequestStepOutput;
+import com.dawhey.challenge.step.output.PasswordRequestStepOutput;
+import com.dawhey.challenge.step.output.WelcomePageStepResultOutput;
+import org.jsoup.Connection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -40,13 +43,21 @@ class ScrapingServiceTest {
 
     @Test
     public void shouldRunStepsInOrder_whenScrapeMethodCalled() {
+        //given
+        var responseMock = mock(Connection.Response.class);
+        when(welcomePageStep.execute()).thenReturn(new WelcomePageStepResultOutput(responseMock));
+        when(multicodeRequestStep.execute(any(), any(), any())).thenReturn(new MulticodeRequestStepOutput(responseMock));
+        when(passwordRequestStep.execute(any(), any(), any(), any())).thenReturn(new PasswordRequestStepOutput(responseMock));
+
+        //when
         var inOrder = inOrder(welcomePageStep, multicodeRequestStep, passwordRequestStep, accountPageStep);
         underTest.scrapeBankPageForAccountDetails(new Credentials(MILLEKOD, PASSWORD, PESEL));
 
+        //then
         inOrder.verify(welcomePageStep).execute();
-        inOrder.verify(multicodeRequestStep).execute(any(), eq(MILLEKOD));
-        inOrder.verify(passwordRequestStep).execute(any(), eq(PESEL), eq(PASSWORD));
-        inOrder.verify(accountPageStep).execute(any());
+        inOrder.verify(multicodeRequestStep).execute(any(), any(), eq(MILLEKOD));
+        inOrder.verify(passwordRequestStep).execute(any(), any(), eq(PESEL), eq(PASSWORD));
+        inOrder.verify(accountPageStep).execute(any(), any());
     }
 
 }

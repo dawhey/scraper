@@ -2,8 +2,8 @@ package com.dawhey.challenge.step;
 
 import com.dawhey.challenge.client.MilleniumWebPageClient;
 import com.dawhey.challenge.request.PasswordRequest;
-import com.dawhey.challenge.step.result.MulticodeRequestStepResultSession;
-import com.dawhey.challenge.step.result.Session;
+import com.dawhey.challenge.step.output.MulticodeRequestStepOutput;
+import com.dawhey.challenge.step.output.Session;
 import com.dawhey.challenge.util.ResponseParser;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -50,18 +50,17 @@ class PasswordRequestStepTest {
         when(responseParser.parse(any())).thenReturn(Jsoup.parse(PASSWORD_STEP_HTML));
 
         //when
-        var result = underTest.execute(new MulticodeRequestStepResultSession(new Session(welcomePageCookies(), any())), PESEL, PASSWORD);
+        var result = underTest.execute(new MulticodeRequestStepOutput(any()), new Session(welcomePageCookies()), PESEL, PASSWORD);
 
         //then
         verify(milleniumWebPageClient).performPasswordRequest(passwordRequest());
-        assertTrue(result.getCookies().entrySet().containsAll(welcomePageCookies().entrySet()));
-        assertTrue(result.getCookies().entrySet().containsAll(signInCookies().entrySet()));
+        assertTrue(result.response.cookies().entrySet().containsAll(signInCookies().entrySet()));
     }
 
     private PasswordRequest passwordRequest() {
         var peselFormData = new HashMap<String, String>() {{
-           put("PESEL_1", "2");
-           put("PESEL_10", "1");
+            put("PESEL_1", "2");
+            put("PESEL_10", "1");
         }};
 
         return new PasswordRequest(

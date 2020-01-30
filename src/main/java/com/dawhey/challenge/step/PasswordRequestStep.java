@@ -3,8 +3,9 @@ package com.dawhey.challenge.step;
 import com.dawhey.challenge.client.MilleniumWebPageClient;
 import com.dawhey.challenge.client.RequestParams;
 import com.dawhey.challenge.request.PasswordRequest;
-import com.dawhey.challenge.step.result.MulticodeRequestStepResultSession;
-import com.dawhey.challenge.step.result.PasswordRequestStepResultSession;
+import com.dawhey.challenge.step.output.MulticodeRequestStepOutput;
+import com.dawhey.challenge.step.output.PasswordRequestStepOutput;
+import com.dawhey.challenge.step.output.Session;
 import com.dawhey.challenge.util.DocumentParser;
 import com.dawhey.challenge.util.ResponseParser;
 import org.jsoup.nodes.Element;
@@ -31,23 +32,21 @@ public class PasswordRequestStep {
         this.milleniumWebPageClient = milleniumWebPageClient;
     }
 
-    public PasswordRequestStepResultSession execute(MulticodeRequestStepResultSession session, char[] pesel, char[] password) {
-        var request = buildRequestData(session, pesel, password);
+    public PasswordRequestStepOutput execute(MulticodeRequestStepOutput output, Session session, char[] pesel, char[] password) {
+        var request = request(output, session, pesel, password);
         var response = milleniumWebPageClient.performPasswordRequest(request);
-        session.setMostRecentResponse(response);
-        session.getCookies().putAll(response.cookies());
-        return new PasswordRequestStepResultSession(session);
+        return new PasswordRequestStepOutput(response);
     }
 
-    private PasswordRequest buildRequestData(MulticodeRequestStepResultSession session, char[] pesel, char[] password) {
-        var documentHandler = new DocumentParser(responseParser, session.getMostRecentResponse());
+    private PasswordRequest request(MulticodeRequestStepOutput output, Session session, char[] pesel, char[] password) {
+        var documentHandler = new DocumentParser(responseParser, output.response);
 
         return new PasswordRequest(
                 getPeselInputFormDataMap(documentHandler.findElementsBySelector("input[name~=PESEL*]"), pesel),
                 documentHandler.findValueOfInputByName(RequestParams.VERIFICATION_TOKEN_PARAM),
                 documentHandler.findValueOfInputByName(RequestParams.BOT_DETECTION_TOKEN_PARAM),
                 documentHandler.findValueOfInputByName(RequestParams.LOGIN_CHALLENGE_PARAM),
-                new HashMap<>(session.getCookies()),
+                new HashMap<>(session.cookies),
                 password);
     }
 

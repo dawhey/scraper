@@ -5,18 +5,16 @@ import com.dawhey.challenge.request.MulticodeRequest;
 import com.dawhey.challenge.request.PasswordRequest;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.dawhey.challenge.client.RequestParams.*;
+
 @Service
 public class MilleniumWebPageClient {
-
-    @Value("${millenium.base.url}")
-    private String milleniumBaseUrl;
 
     public Connection.Response getMilleniumWelcomePage() {
         return execute(request(Connection.Method.GET, "osobiste2/Retail/Login/MulticodeRequest"));
@@ -26,7 +24,7 @@ public class MilleniumWebPageClient {
         return execute(request(Connection.Method.POST, "osobiste2/Retail/Login/MulticodeRequest")
                 .cookies(requestData.cookies)
                 .data("Millekod", String.valueOf(requestData.millekod))
-                .data(RequestParams.VERIFICATION_TOKEN_PARAM, requestData.verificationTokenValue));
+                .data(VERIFICATION_TOKEN_PARAM, requestData.verificationTokenValue));
     }
 
     public Connection.Response performPasswordRequest(PasswordRequest requestData) {
@@ -35,9 +33,9 @@ public class MilleniumWebPageClient {
                 .data(passwordRequestFormStaticData())
                 .data(requestData.peselFormData)
                 .data("PasswordOne", String.valueOf(requestData.password))
-                .data(RequestParams.BOT_DETECTION_TOKEN_PARAM, requestData.botDetectionClientToken)
-                .data(RequestParams.VERIFICATION_TOKEN_PARAM, requestData.requestVerificationToken)
-                .data(RequestParams.LOGIN_CHALLENGE_PARAM, requestData.securityDigitsLoginChallengeToken)
+                .data(BOT_DETECTION_TOKEN_PARAM, requestData.botDetectionClientToken)
+                .data(VERIFICATION_TOKEN_PARAM, requestData.requestVerificationToken)
+                .data(LOGIN_CHALLENGE_PARAM, requestData.securityDigitsLoginChallengeToken)
                 .data("SecurityDigitsViewModel.LoginPassword", requestData.getSecurityDigitsPassword()));
     }
 
@@ -47,9 +45,9 @@ public class MilleniumWebPageClient {
     }
 
     private Connection request(Connection.Method method, String endpoint) {
-        return Jsoup.connect(milleniumBaseUrl + endpoint)
+        return Jsoup.connect(MILLENIUM_BASE_URL + endpoint)
                 .method(method)
-                .userAgent(RequestParams.USER_AGENT)
+                .userAgent(USER_AGENT)
                 .followRedirects(true);
     }
 
