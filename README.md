@@ -1,4 +1,6 @@
-# Scraper
+# Scraper [![Build Status](https://travis-ci.org/dawhey/scraper.svg?branch=master)](https://travis-ci.org/dawhey/scraper) [![codecov](https://codecov.io/gh/dawhey/scraper/branch/master/graph/badge.svg)](https://codecov.io/gh/dawhey/scraper)
+
+
 #### Simple banking page web scraper
 - Written using `Java 11` & `Spring Boot 2`
 - GUI-less
