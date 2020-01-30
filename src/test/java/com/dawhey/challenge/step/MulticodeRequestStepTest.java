@@ -1,11 +1,11 @@
 package com.dawhey.challenge.step;
 
+import com.dawhey.challenge.TestUtil;
 import com.dawhey.challenge.client.MilleniumWebPageClient;
 import com.dawhey.challenge.request.MulticodeRequest;
 import com.dawhey.challenge.step.output.Session;
 import com.dawhey.challenge.step.output.WelcomePageStepResultOutput;
 import com.dawhey.challenge.util.ResponseParser;
-import com.dawhey.challenge.util.TestUtil;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static com.dawhey.challenge.util.TestUtil.*;
+import static com.dawhey.challenge.TestUtil.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

@@ -1,7 +1,7 @@
 package com.dawhey.challenge.step;
 
+import com.dawhey.challenge.TestUtil;
 import com.dawhey.challenge.client.MilleniumWebPageClient;
-import com.dawhey.challenge.util.TestUtil;
 import org.jsoup.Connection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

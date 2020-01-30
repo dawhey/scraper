@@ -1,4 +1,4 @@
-package com.dawhey.challenge.util;
+package com.dawhey.challenge;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,9 +7,9 @@ public class TestUtil {
 
     public static final char[] PESEL = "12345678901".toCharArray();
 
-    public static final char[] PASSWORD = "12345678".toCharArray();
+    public static final char[] PASSWORD = "123456x".toCharArray();
 
-    public static final char[] MILLEKOD = "12345678".toCharArray();
+    public static final char[] MILLEKOD = "123456x".toCharArray();
 
     public static final String ACCOUNT_1_NAME = "Konto 360°";
 

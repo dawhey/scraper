@@ -15,7 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static com.dawhey.challenge.util.TestUtil.*;
+import static com.dawhey.challenge.TestUtil.*;
 import static org.mockito.Mockito.*;
 
 

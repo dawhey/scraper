@@ -5,12 +5,13 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class ResponseParserTest {
 
-    private ResponseParser underTest;
+    private ResponseParser underTest = new ResponseParser();
 
     @Test
     void shouldThrowRuntimeException_whenIOExceptionIsThrown() throws IOException {

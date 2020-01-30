@@ -17,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
 
-import static com.dawhey.challenge.util.TestUtil.*;
+import static com.dawhey.challenge.TestUtil.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;

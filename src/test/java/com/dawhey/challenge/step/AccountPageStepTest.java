@@ -20,7 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static com.dawhey.challenge.util.TestUtil.*;
+import static com.dawhey.challenge.TestUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 

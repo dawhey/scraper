@@ -5,7 +5,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.env.PropertyResolver;
 
-import static com.dawhey.challenge.util.TestUtil.*;
+import static com.dawhey.challenge.TestUtil.*;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
