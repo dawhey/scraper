@@ -29,7 +29,7 @@ class WelcomePageStepTest {
     }
 
     @Test
-    public void shouldPerformClientRequest_whenCalled() {
+    public void shouldGetWelcomePage_whenExecuted() {
         //given
         var responseMock = mock(Connection.Response.class);
         when(responseMock.cookies()).thenReturn(TestUtil.welcomePageCookies());

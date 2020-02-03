@@ -6,11 +6,11 @@ import org.jsoup.nodes.Element;
 
 import java.util.List;
 
-public class DocumentParser {
+public class ScraperDocument {
 
     private final Document document;
 
-    public DocumentParser(ResponseParser parser, Connection.Response response) {
+    public ScraperDocument(ResponseParser parser, Connection.Response response) {
         this.document = parser.parse(response);
     }
 

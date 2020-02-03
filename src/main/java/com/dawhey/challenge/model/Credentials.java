@@ -1,6 +1,6 @@
 package com.dawhey.challenge.model;
 
-import com.dawhey.challenge.exception.InvalidCredentialsException;
+import com.dawhey.challenge.exception.NoCredentialsException;
 import org.jsoup.internal.StringUtil;
 
 public class Credentials {
@@ -19,7 +19,7 @@ public class Credentials {
 
     private char[] fromString(String property, String propertyName) {
         if (StringUtil.isBlank(property)) {
-            throw new InvalidCredentialsException("No property with name *" + propertyName + "* passed to application.");
+            throw new NoCredentialsException("No property with name *" + propertyName + "* passed to application.");
         }
         return property.toCharArray();
     }

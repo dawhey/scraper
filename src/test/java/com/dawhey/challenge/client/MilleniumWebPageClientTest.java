@@ -15,25 +15,25 @@ class MilleniumWebPageClientTest {
     private MilleniumWebPageClient underTest = new MilleniumWebPageClient();
 
     @Test
-    public void shouldPerformCorrectRequest_whenGettingWelcomePage() {
+    public void shouldGetOkResponseStatus_whenGettingWelcomePage() {
         var response = underTest.getMilleniumWelcomePage();
         assertEquals(Response.SC_OK, response.statusCode());
     }
 
     @Test
-    public void shouldPerformCorrectRequest_whenPostingMillekod() {
+    public void shouldGetOkResponseStatus_whenPostingMillekod() {
         var response = underTest.performMultiCodeRequest(new MulticodeRequest(new HashMap<>(), REQUEST_VERIFICATION_TOKEN, MILLEKOD));
         assertEquals(Response.SC_OK, response.statusCode());
     }
 
     @Test
-    public void shouldPerformCorrectRequest_whenPostingPassword() {
+    public void shouldGetOkResponseStatus_whenPostingPassword() {
         var response = underTest.performPasswordRequest(new PasswordRequest(new HashMap<>(), REQUEST_VERIFICATION_TOKEN, BOT_DETECTION_CLIENT_TOKEN, SECURITY_DIGITS_LOGIN_CHALLENGE, new HashMap<>(), PASSWORD));
         assertEquals(Response.SC_OK, response.statusCode());
     }
 
     @Test
-    public void shouldPerformCorrectRequest_whenGettingAccountsPage() {
+    public void shouldGetOkResponseStatus_whenGettingAccountsPage() {
         var response = underTest.getAccountListPage(new HashMap<>());
         assertEquals(Response.SC_OK, response.statusCode());
     }

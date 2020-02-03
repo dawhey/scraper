@@ -39,7 +39,7 @@ class MulticodeRequestStepTest {
     }
 
     @Test
-    public void shouldPerformCorrectRequest_whenExecuted() {
+    public void shouldPerformMultiCodeRequest_whenExecuted() {
         //given
         when(responseParser.parse(any())).thenReturn(Jsoup.parse(MULTICODE_STEP_HTML));
 

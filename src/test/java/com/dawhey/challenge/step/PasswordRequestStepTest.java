@@ -19,7 +19,6 @@ import java.util.HashMap;
 
 import static com.dawhey.challenge.TestUtil.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
@@ -42,7 +41,7 @@ class PasswordRequestStepTest {
     }
 
     @Test
-    public void shouldPerformCorrectRequest_whenExecuted() {
+    public void shouldPerformPasswordRequest_whenExecuted() {
         //given
         var responseMock = mock(Connection.Response.class);
         when(responseMock.cookies()).thenReturn(signInCookies());

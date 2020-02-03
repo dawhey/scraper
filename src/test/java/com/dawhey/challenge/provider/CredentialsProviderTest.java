@@ -1,6 +1,6 @@
 package com.dawhey.challenge.provider;
 
-import com.dawhey.challenge.exception.InvalidCredentialsException;
+import com.dawhey.challenge.exception.NoCredentialsException;
 import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.env.PropertyResolver;
@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
-class SpringPropertiesCredentialsProviderTest {
+class CredentialsProviderTest {
 
-    private SpringPropertiesCredentialsProvider underTest = new SpringPropertiesCredentialsProvider();
+    private CredentialsProvider underTest = new CredentialsProvider();
 
     @Test
     public void shouldReturnCredentials_whenThereAreProperties() {
@@ -40,7 +40,7 @@ class SpringPropertiesCredentialsProviderTest {
         ReflectionTestUtils.setField(underTest, "password", Strings.EMPTY);
 
         //then
-        assertThrows(InvalidCredentialsException.class, () -> underTest.credentials());
+        assertThrows(NoCredentialsException.class, () -> underTest.credentials());
     }
 
 }

@@ -25,7 +25,7 @@ class PasswordRequestTest {
 
     @Test
     public void shouldCreateCorrectSecurityDigitsPassword_whenPeselFormPassed() {
-        assertEquals(PESEL_1 + PESEL_2, underTest.getSecurityDigitsPassword());
+        assertEquals(PESEL_1 + PESEL_2, underTest.securityDigitsPassword);
     }
 
 }

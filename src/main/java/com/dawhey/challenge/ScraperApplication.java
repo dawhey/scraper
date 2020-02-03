@@ -1,32 +1,30 @@
 package com.dawhey.challenge;
 
-import com.dawhey.challenge.provider.SpringPropertiesCredentialsProvider;
+import com.dawhey.challenge.provider.CredentialsProvider;
 import com.dawhey.challenge.service.ScrapingService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 public class ScraperApplication {
 
     private static ScrapingService scrapingService;
 
-    private static SpringPropertiesCredentialsProvider springPropertiesCredentialsProvider;
+    private static CredentialsProvider credentialsProvider;
 
     public static void main(String[] args) {
         setUp(args);
         scrape();
     }
 
-    private static ConfigurableApplicationContext setUp(String[] args) {
+    private static void setUp(String[] args) {
         var context = SpringApplication.run(ScraperApplication.class, args);
         scrapingService = context.getBean(ScrapingService.class);
-        springPropertiesCredentialsProvider = new SpringPropertiesCredentialsProvider();
-        return context;
+        credentialsProvider = new CredentialsProvider();
     }
 
     private static void scrape() {
-        var credentials = springPropertiesCredentialsProvider.credentials();
+        var credentials = credentialsProvider.credentials();
         var accounts = scrapingService.scrapeBankPageForAccountDetails(credentials);
         System.out.println("Accounts list: " + accounts);
     }

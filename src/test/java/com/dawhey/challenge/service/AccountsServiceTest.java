@@ -1,10 +1,8 @@
-package com.dawhey.challenge.step;
+package com.dawhey.challenge.service;
 
 import com.dawhey.challenge.client.MilleniumWebPageClient;
 import com.dawhey.challenge.client.RequestParams;
-import com.dawhey.challenge.exception.InvalidCredentialsException;
 import com.dawhey.challenge.model.Account;
-import com.dawhey.challenge.step.output.PasswordRequestStepOutput;
 import com.dawhey.challenge.step.output.Session;
 import com.dawhey.challenge.util.ResponseParser;
 import org.jsoup.Connection;
@@ -21,11 +19,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import static com.dawhey.challenge.TestUtil.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-class AccountPageStepTest {
+class AccountsServiceTest {
 
     @Mock
     private ResponseParser responseParser;
@@ -34,7 +33,7 @@ class AccountPageStepTest {
     private MilleniumWebPageClient webPageClient;
 
     @InjectMocks
-    private AccountPageStep underTest;
+    private AccountsService underTest;
 
     @BeforeEach
     public void setUp() {
@@ -49,21 +48,11 @@ class AccountPageStepTest {
         when(responseParser.parse(any())).thenReturn(Jsoup.parse(ACCOUNT_PAGE_STEP_HTML));
 
         //when
-        var accounts = underTest.execute(new PasswordRequestStepOutput(response), new Session(null));
+        var accounts = underTest.extract(new Session(null));
 
         //then
         assertEquals(2, accounts.size());
         assertTrue(accounts.contains(new Account(ACCOUNT_1_NAME, ACCOUNT_1_BALANCE)));
         assertTrue(accounts.contains(new Account(ACCOUNT_2_NAME, ACCOUNT_2_BALANCE)));
-    }
-
-    @Test
-    public void shouldThrowInvalidCredentialsException_whenFailedToLogin() throws MalformedURLException {
-        //given
-        var response = mock(Connection.Response.class);
-        when(response.url()).thenReturn(new URL(RequestParams.MILLENIUM_BASE_URL + "error/"));
-
-        //then
-        assertThrows(InvalidCredentialsException.class, () -> underTest.execute(new PasswordRequestStepOutput(response), new Session(null)));
     }
 }

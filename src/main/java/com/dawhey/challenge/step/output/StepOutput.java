@@ -5,6 +5,5 @@ import org.jsoup.Connection;
 
 @AllArgsConstructor
 public class StepOutput {
-
     public final Connection.Response response;
 }

@@ -20,23 +20,23 @@ public class MilleniumWebPageClient {
         return execute(request(Connection.Method.GET, "osobiste2/Retail/Login/MulticodeRequest"));
     }
 
-    public Connection.Response performMultiCodeRequest(MulticodeRequest requestData) {
+    public Connection.Response performMultiCodeRequest(MulticodeRequest request) {
         return execute(request(Connection.Method.POST, "osobiste2/Retail/Login/MulticodeRequest")
-                .cookies(requestData.cookies)
-                .data("Millekod", String.valueOf(requestData.millekod))
-                .data(VERIFICATION_TOKEN_PARAM, requestData.verificationTokenValue));
+                .cookies(request.cookies)
+                .data("Millekod", String.valueOf(request.millekod))
+                .data(VERIFICATION_TOKEN_PARAM, request.verificationTokenValue));
     }
 
-    public Connection.Response performPasswordRequest(PasswordRequest requestData) {
+    public Connection.Response performPasswordRequest(PasswordRequest request) {
         return execute(request(Connection.Method.POST, "osobiste2/Retail/Login/PasswordOneRequest")
-                .cookies(requestData.cookies)
+                .cookies(request.cookies)
                 .data(passwordRequestFormStaticData())
-                .data(requestData.peselFormData)
-                .data("PasswordOne", String.valueOf(requestData.password))
-                .data(BOT_DETECTION_TOKEN_PARAM, requestData.botDetectionClientToken)
-                .data(VERIFICATION_TOKEN_PARAM, requestData.requestVerificationToken)
-                .data(LOGIN_CHALLENGE_PARAM, requestData.securityDigitsLoginChallengeToken)
-                .data("SecurityDigitsViewModel.LoginPassword", requestData.getSecurityDigitsPassword()));
+                .data(request.peselFormData)
+                .data("PasswordOne", String.valueOf(request.password))
+                .data(BOT_DETECTION_TOKEN_PARAM, request.botDetectionClientToken)
+                .data(VERIFICATION_TOKEN_PARAM, request.requestVerificationToken)
+                .data(LOGIN_CHALLENGE_PARAM, request.securityDigitsLoginChallengeToken)
+                .data("SecurityDigitsViewModel.LoginPassword", request.securityDigitsPassword));
     }
 
     public Connection.Response getAccountListPage(Map<String, String> cookies) {
