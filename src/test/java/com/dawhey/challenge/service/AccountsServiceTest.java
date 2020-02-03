@@ -48,7 +48,7 @@ class AccountsServiceTest {
         when(responseParser.parse(any())).thenReturn(Jsoup.parse(ACCOUNT_PAGE_STEP_HTML));
 
         //when
-        var accounts = underTest.extract(new Session(null));
+        var accounts = underTest.scrape(new Session(null));
 
         //then
         assertEquals(2, accounts.size());

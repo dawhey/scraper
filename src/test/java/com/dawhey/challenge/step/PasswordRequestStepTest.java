@@ -53,7 +53,7 @@ class PasswordRequestStepTest {
 
         //then
         verify(milleniumWebPageClient).performPasswordRequest(passwordRequest());
-        assertTrue(result.response.cookies().entrySet().containsAll(signInCookies().entrySet()));
+        assertTrue(result.cookies().entrySet().containsAll(signInCookies().entrySet()));
     }
 
     private PasswordRequest passwordRequest() {

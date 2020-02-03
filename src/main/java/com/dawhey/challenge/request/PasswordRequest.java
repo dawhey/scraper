@@ -1,7 +1,6 @@
 package com.dawhey.challenge.request;
 
 import com.dawhey.challenge.client.RequestParams;
-import com.dawhey.challenge.step.output.Session;
 import com.dawhey.challenge.util.ScraperDocument;
 import lombok.EqualsAndHashCode;
 import org.apache.logging.log4j.util.Strings;
@@ -50,13 +49,13 @@ public class PasswordRequest {
         this.securityDigitsPassword = String.join(Strings.EMPTY, peselFormData.values());
     }
 
-    public static PasswordRequest request(ScraperDocument document, Session session, char[] pesel, char[] password) {
+    public static PasswordRequest request(ScraperDocument document, Map<String, String> cookies, char[] pesel, char[] password) {
         return new PasswordRequest(
                 getPeselInputFormDataMap(document.findElementsBySelector("input[name~=PESEL*]"), pesel),
                 document.findValueOfInputByName(RequestParams.VERIFICATION_TOKEN_PARAM),
                 document.findValueOfInputByName(RequestParams.BOT_DETECTION_TOKEN_PARAM),
                 document.findValueOfInputByName(RequestParams.LOGIN_CHALLENGE_PARAM),
-                new HashMap<>(session.cookies),
+                new HashMap<>(cookies),
                 password);
     }
 

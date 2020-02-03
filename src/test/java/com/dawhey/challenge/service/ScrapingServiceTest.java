@@ -39,7 +39,7 @@ class ScrapingServiceTest {
 
         //then
         inOrder.verify(loginService).login(credentials);
-        inOrder.verify(accountsService).extract(any());
+        inOrder.verify(accountsService).scrape(any());
     }
 
 }

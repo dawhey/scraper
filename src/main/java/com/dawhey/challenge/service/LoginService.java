@@ -21,8 +21,6 @@ public class LoginService {
 
     private final PasswordRequestStep passwordRequestStep;
 
-    private final Session session = new Session(new HashMap<>());
-
     public LoginService(WelcomePageStep welcomePageStep, MulticodeRequestStep multicodeRequestStep, PasswordRequestStep passwordRequestStep) {
         this.welcomePageStep = welcomePageStep;
         this.multicodeRequestStep = multicodeRequestStep;
@@ -30,19 +28,20 @@ public class LoginService {
     }
 
     public Session login(Credentials credentials) {
+        var session = new Session(new HashMap<>());
+
         var welcomePageStepOutput = welcomePageStep.execute();
         session.cookies.putAll(welcomePageStepOutput.response.cookies());
 
         var multicodeRequestStepOutput = multicodeRequestStep.execute(welcomePageStepOutput, session, credentials.millekod);
         session.cookies.putAll(multicodeRequestStepOutput.response.cookies());
 
-        var passwordRequestStepOutput = passwordRequestStep.execute(multicodeRequestStepOutput, session, credentials.pesel, credentials.password);
-        session.cookies.putAll(passwordRequestStepOutput.response.cookies());
+        var response = passwordRequestStep.execute(multicodeRequestStepOutput, session, credentials.pesel, credentials.password);
+        session.cookies.putAll(response.cookies());
 
-        verifyIfUserLoggedIn(passwordRequestStepOutput.response);
+        verifyIfUserLoggedIn(response);
         return session;
     }
-
 
     private void verifyIfUserLoggedIn(Connection.Response previousResponse) {
         if (!previousResponse.url().toString().equals(RequestParams.MILLENIUM_BASE_URL + "osobiste/")) {

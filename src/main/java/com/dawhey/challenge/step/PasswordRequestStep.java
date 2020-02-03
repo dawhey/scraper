@@ -3,10 +3,10 @@ package com.dawhey.challenge.step;
 import com.dawhey.challenge.client.MilleniumWebPageClient;
 import com.dawhey.challenge.request.PasswordRequest;
 import com.dawhey.challenge.step.output.MulticodeRequestStepOutput;
-import com.dawhey.challenge.step.output.PasswordRequestStepOutput;
 import com.dawhey.challenge.step.output.Session;
 import com.dawhey.challenge.util.ResponseParser;
 import com.dawhey.challenge.util.ScraperDocument;
+import org.jsoup.Connection;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,11 +20,10 @@ public class PasswordRequestStep {
         this.milleniumWebPageClient = milleniumWebPageClient;
     }
 
-    public PasswordRequestStepOutput execute(MulticodeRequestStepOutput output, Session session, char[] pesel, char[] password) {
+    public Connection.Response execute(MulticodeRequestStepOutput output, Session session, char[] pesel, char[] password) {
         var document = new ScraperDocument(responseParser, output.response);
-        var request = PasswordRequest.request(document, session, pesel, password);
-        var response = milleniumWebPageClient.performPasswordRequest(request);
-        return new PasswordRequestStepOutput(response);
+        var request = PasswordRequest.request(document, session.cookies, pesel, password);
+        return milleniumWebPageClient.performPasswordRequest(request);
     }
 
 
