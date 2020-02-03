@@ -51,7 +51,7 @@ class ScrapingServiceTest {
 
         //when
         var inOrder = inOrder(welcomePageStep, multicodeRequestStep, passwordRequestStep, accountPageStep);
-        underTest.scrapeBankPageForAccountDetails(new Credentials(MILLEKOD, PASSWORD, PESEL));
+        underTest.scrapeBankPageForAccountDetails(new Credentials(String.valueOf(MILLEKOD), String.valueOf(PASSWORD), String.valueOf(PESEL)));
 
         //then
         inOrder.verify(welcomePageStep).execute();

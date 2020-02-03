@@ -4,12 +4,12 @@ import com.dawhey.challenge.exception.InvalidCredentialsException;
 import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.env.PropertyResolver;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.dawhey.challenge.TestUtil.*;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class SpringPropertiesCredentialsProviderTest {
 
@@ -18,13 +18,12 @@ class SpringPropertiesCredentialsProviderTest {
     @Test
     public void shouldReturnCredentials_whenThereAreProperties() {
         //given
-        var source = mock(PropertyResolver.class);
-        when(source.getProperty("millenium.millekod")).thenReturn(String.valueOf(MILLEKOD));
-        when(source.getProperty("millenium.pesel")).thenReturn(String.valueOf(PESEL));
-        when(source.getProperty("millenium.password")).thenReturn(String.valueOf(PASSWORD));
+        ReflectionTestUtils.setField(underTest, "millekod", String.valueOf(MILLEKOD));
+        ReflectionTestUtils.setField(underTest, "pesel", String.valueOf(PESEL));
+        ReflectionTestUtils.setField(underTest, "password", String.valueOf(PASSWORD));
 
         //when
-        var credentials = underTest.getFrom(source);
+        var credentials = underTest.credentials();
 
         //then
         assertArrayEquals(PESEL, credentials.pesel);
@@ -36,12 +35,12 @@ class SpringPropertiesCredentialsProviderTest {
     public void shouldThrowException_whenOneOfPropertiesNotPassed() {
         //given
         var source = mock(PropertyResolver.class);
-        when(source.getProperty("millenium.millekod")).thenReturn(String.valueOf(MILLEKOD));
-        when(source.getProperty("millenium.pesel")).thenReturn(Strings.EMPTY);
-        when(source.getProperty("millenium.password")).thenReturn(Strings.EMPTY);
+        ReflectionTestUtils.setField(underTest, "millekod", String.valueOf(MILLEKOD));
+        ReflectionTestUtils.setField(underTest, "pesel", null);
+        ReflectionTestUtils.setField(underTest, "password", Strings.EMPTY);
 
         //then
-        assertThrows(InvalidCredentialsException.class, () -> underTest.getFrom(source));
+        assertThrows(InvalidCredentialsException.class, () -> underTest.credentials());
     }
 
 }

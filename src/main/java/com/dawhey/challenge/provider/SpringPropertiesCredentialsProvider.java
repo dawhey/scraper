@@ -1,25 +1,22 @@
 package com.dawhey.challenge.provider;
 
-import com.dawhey.challenge.exception.InvalidCredentialsException;
 import com.dawhey.challenge.model.Credentials;
-import org.jsoup.internal.StringUtil;
-import org.springframework.core.env.PropertyResolver;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-public class SpringPropertiesCredentialsProvider implements CredentialsProvider<PropertyResolver> {
+@Component
+public class SpringPropertiesCredentialsProvider {
 
-    @Override
-    public Credentials getFrom(PropertyResolver source) {
-        char[] millekod = getProperty(source, "millenium.millekod");
-        char[] password = getProperty(source, "millenium.password");
-        char[] pesel = getProperty(source, "millenium.pesel");
+    @Value("${millenium.millekod}")
+    private String millekod;
+
+    @Value("${millenium.password}")
+    private String password;
+
+    @Value("${millenium.pesel}")
+    private String pesel;
+
+    public Credentials credentials() {
         return new Credentials(millekod, password, pesel);
-    }
-
-    private char[] getProperty(PropertyResolver source, String name) {
-        var property = source.getProperty(name);
-        if (StringUtil.isBlank(property)) {
-            throw new InvalidCredentialsException("No property with name *" + name + "* passed to application.");
-        }
-        return property.toCharArray();
     }
 }
