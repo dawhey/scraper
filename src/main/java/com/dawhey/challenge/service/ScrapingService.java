@@ -20,6 +20,6 @@ public class ScrapingService {
 
     public Set<Account> scrapeBankPageForAccountDetails(Credentials credentials) {
         var session = loginService.login(credentials);
-        return accountsService.scrape(session);
+        return accountsService.extractAccounts(session);
     }
 }

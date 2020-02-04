@@ -14,11 +14,6 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode
 public class PasswordRequest {
 
-    /**
-     * Index of first character of number in PESEL input name
-     */
-    public static final int PESEL_INPUT_NUMBER_INDEX = 6;
-
     public final Map<String, String> peselFormData;
 
     public final String requestVerificationToken;
@@ -59,15 +54,21 @@ public class PasswordRequest {
                 password);
     }
 
-    /**
-     * @param peselInputList all pesel number inputs (disabled and enabled)
-     * @return Map<PESEL_DIGIT_INDEX, PESEL_VALUE_AT_INDEX> - map of form data that should be filled in by user eg. (("PESEL_6", "2"), ("PESEL_10", "9"));
-     */
     private static Map<String, String> getPeselInputFormDataMap(List<Element> peselInputList, char[] pesel) {
         return peselInputList.stream()
                 .filter(element -> !element.attributes().hasKey("disabled"))
                 .collect(Collectors.toMap(
                         element -> element.attr("name"),
-                        element -> String.valueOf(pesel[Integer.parseInt(element.attr("name").substring(PESEL_INPUT_NUMBER_INDEX))])));
+                        element -> String.valueOf(pesel[peselChallengeDigitIndex(element)])
+                ));
+    }
+
+    private static int peselChallengeDigitIndex(Element element) {
+        var peselAttributeValue = element.attr("name");
+        return Integer.parseInt(textAfter(peselAttributeValue, "PESEL_"));
+    }
+
+    private static String textAfter(String fullText, String after) {
+        return fullText.substring(after.length());
     }
 }

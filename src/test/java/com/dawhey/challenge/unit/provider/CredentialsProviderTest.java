@@ -1,12 +1,13 @@
-package com.dawhey.challenge.provider;
+package com.dawhey.challenge.unit.provider;
 
 import com.dawhey.challenge.exception.NoCredentialsException;
+import com.dawhey.challenge.provider.CredentialsProvider;
 import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static com.dawhey.challenge.TestUtil.*;
+import static com.dawhey.challenge.unit.TestUtil.*;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;

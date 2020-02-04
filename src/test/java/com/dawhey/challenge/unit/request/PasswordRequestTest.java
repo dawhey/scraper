@@ -1,5 +1,6 @@
-package com.dawhey.challenge.request;
+package com.dawhey.challenge.unit.request;
 
+import com.dawhey.challenge.request.PasswordRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -15,35 +15,24 @@ import java.util.stream.Collectors;
 @Component
 public class AccountsService {
 
-    private MilleniumWebPageClient milleniumWebPageClient;
+    private final MilleniumWebPageClient milleniumWebPageClient;
 
-    private ResponseParser responseParser = new ResponseParser();
+    private final ResponseParser responseParser;
 
-    public AccountsService(MilleniumWebPageClient milleniumWebPageClient) {
+    public AccountsService(MilleniumWebPageClient milleniumWebPageClient, ResponseParser responseParser) {
         this.milleniumWebPageClient = milleniumWebPageClient;
+        this.responseParser = responseParser;
     }
 
-    public Set<Account> scrape(Session session) {
+    public Set<Account> extractAccounts(Session session) {
         var response = milleniumWebPageClient.getAccountListPage(session.cookies);
         var document = new ScraperDocument(responseParser, response);
         var accountTableRows = findAccountBlockElements(document);
-
-        return extractAccounts(accountTableRows);
+        return extract(accountTableRows);
     }
 
-    private Set<Account> extractAccounts(List<Element> accountTableRows) {
-        return accountTableRows.stream()
-                .map(AccountsService::extractAccount).collect(Collectors.toSet());
-    }
-
-    private static Account extractAccount(Element row) {
-        String accountName = row.getElementsByTag("a").first().text();
-        String accountBalance = row.getElementsByClass("col2")
-                .first()
-                .getElementsByTag("span")
-                .first()
-                .attr("data-text");
-        return new Account(accountName, accountBalance);
+    private Set<Account> extract(List<Element> accountTableRows) {
+        return accountTableRows.stream().map(Account::new).collect(Collectors.toSet());
     }
 
     private List<Element> findAccountBlockElements(ScraperDocument document) {

@@ -17,18 +17,18 @@ import static com.dawhey.challenge.client.RequestParams.*;
 public class MilleniumWebPageClient {
 
     public Connection.Response getMilleniumWelcomePage() {
-        return execute(request(Connection.Method.GET, "osobiste2/Retail/Login/MulticodeRequest"));
+        return fetch(request(Connection.Method.GET, "osobiste2/Retail/Login/MulticodeRequest"));
     }
 
     public Connection.Response performMultiCodeRequest(MulticodeRequest request) {
-        return execute(request(Connection.Method.POST, "osobiste2/Retail/Login/MulticodeRequest")
+        return fetch(request(Connection.Method.POST, "osobiste2/Retail/Login/MulticodeRequest")
                 .cookies(request.cookies)
                 .data("Millekod", String.valueOf(request.millekod))
                 .data(VERIFICATION_TOKEN_PARAM, request.verificationTokenValue));
     }
 
     public Connection.Response performPasswordRequest(PasswordRequest request) {
-        return execute(request(Connection.Method.POST, "osobiste2/Retail/Login/PasswordOneRequest")
+        return fetch(request(Connection.Method.POST, "osobiste2/Retail/Login/PasswordOneRequest")
                 .cookies(request.cookies)
                 .data(passwordRequestFormStaticData())
                 .data(request.peselFormData)
@@ -40,18 +40,18 @@ public class MilleniumWebPageClient {
     }
 
     public Connection.Response getAccountListPage(Map<String, String> cookies) {
-        return execute(request(Connection.Method.GET, "osobiste2/Accounts/CurrentAccountsList/List")
+        return fetch(request(Connection.Method.GET, "osobiste2/Accounts/CurrentAccountsList/List")
                 .cookies(cookies));
     }
 
-    private Connection request(Connection.Method method, String endpoint) {
-        return Jsoup.connect(MILLENIUM_BASE_URL + endpoint)
+    private static Connection request(Connection.Method method, String path) {
+        return Jsoup.connect(MILLENIUM_BASE_URL + path)
                 .method(method)
                 .userAgent(USER_AGENT)
                 .followRedirects(true);
     }
 
-    private Connection.Response execute(Connection connection) {
+    private static Connection.Response fetch(Connection connection) {
         try {
             return connection.execute();
         } catch (IOException e) {
@@ -59,7 +59,7 @@ public class MilleniumWebPageClient {
         }
     }
 
-    private Map<String, String> passwordRequestFormStaticData() {
+    private static Map<String, String> passwordRequestFormStaticData() {
         var formData = new HashMap<String, String>();
         formData.put("SecurityDigitsViewModel.LoginDocuments.DocumentType", "PESEL");
         formData.put("BotDetection.PresentedBefore", "False");

@@ -1,5 +1,6 @@
-package com.dawhey.challenge.client;
+package com.dawhey.challenge.integration.client;
 
+import com.dawhey.challenge.client.MilleniumWebPageClient;
 import com.dawhey.challenge.request.MulticodeRequest;
 import com.dawhey.challenge.request.PasswordRequest;
 import org.apache.catalina.connector.Response;
@@ -7,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static com.dawhey.challenge.TestUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MilleniumWebPageClientTest {
@@ -22,13 +22,20 @@ class MilleniumWebPageClientTest {
 
     @Test
     public void shouldGetOkResponseStatus_whenPostingMillekod() {
-        var response = underTest.performMultiCodeRequest(new MulticodeRequest(new HashMap<>(), REQUEST_VERIFICATION_TOKEN, MILLEKOD));
+        var response = underTest.performMultiCodeRequest(new MulticodeRequest(new HashMap<>(), "some-verification-token", "some-millekod".toCharArray()));
         assertEquals(Response.SC_OK, response.statusCode());
     }
 
     @Test
     public void shouldGetOkResponseStatus_whenPostingPassword() {
-        var response = underTest.performPasswordRequest(new PasswordRequest(new HashMap<>(), REQUEST_VERIFICATION_TOKEN, BOT_DETECTION_CLIENT_TOKEN, SECURITY_DIGITS_LOGIN_CHALLENGE, new HashMap<>(), PASSWORD));
+        var response = underTest.performPasswordRequest(new PasswordRequest(
+                new HashMap<>(),
+                "some-verification-token",
+                "some-bot-detection-token",
+                "some-security-digits-token",
+                new HashMap<>(),
+                "some-password".toCharArray()));
+
         assertEquals(Response.SC_OK, response.statusCode());
     }
 

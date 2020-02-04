@@ -2,9 +2,11 @@ package com.dawhey.challenge.util;
 
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Component
 public class ResponseParser {
 
     public Document parse(Connection.Response response) {

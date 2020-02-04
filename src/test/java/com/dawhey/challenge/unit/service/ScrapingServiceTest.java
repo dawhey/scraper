@@ -1,15 +1,18 @@
-package com.dawhey.challenge.service;
+package com.dawhey.challenge.unit.service;
 
 import com.dawhey.challenge.model.Credentials;
-import org.jsoup.Connection;
+import com.dawhey.challenge.service.AccountsService;
+import com.dawhey.challenge.service.LoginService;
+import com.dawhey.challenge.service.ScrapingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static com.dawhey.challenge.TestUtil.*;
-import static org.mockito.Mockito.*;
+import static com.dawhey.challenge.unit.TestUtil.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.inOrder;
 
 
 @ExtendWith(SpringExtension.class)
@@ -31,15 +34,15 @@ class ScrapingServiceTest {
     @Test
     public void shouldRunStepsInOrder_whenScrapeMethodCalled() {
         //given
-        var responseMock = mock(Connection.Response.class);
         var credentials = new Credentials(String.valueOf(MILLEKOD), String.valueOf(PASSWORD), String.valueOf(PESEL));
+
         //when
         var inOrder = inOrder(loginService, accountsService);
         underTest.scrapeBankPageForAccountDetails(credentials);
 
         //then
         inOrder.verify(loginService).login(credentials);
-        inOrder.verify(accountsService).scrape(any());
+        inOrder.verify(accountsService).extractAccounts(any());
     }
 
 }

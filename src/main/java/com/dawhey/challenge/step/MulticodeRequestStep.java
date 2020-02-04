@@ -13,12 +13,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class MulticodeRequestStep {
 
-    private MilleniumWebPageClient milleniumWebPageClient;
+    private final MilleniumWebPageClient milleniumWebPageClient;
 
-    private ResponseParser responseParser = new ResponseParser();
+    private final ResponseParser responseParser;
 
-    public MulticodeRequestStep(MilleniumWebPageClient milleniumWebPageClient) {
+    public MulticodeRequestStep(MilleniumWebPageClient milleniumWebPageClient, ResponseParser responseParser) {
         this.milleniumWebPageClient = milleniumWebPageClient;
+        this.responseParser = responseParser;
     }
 
     public MulticodeRequestStepOutput execute(WelcomePageStepResultOutput output, Session session, char[] millekod) {

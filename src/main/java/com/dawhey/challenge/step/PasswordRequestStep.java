@@ -12,12 +12,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class PasswordRequestStep {
 
-    private MilleniumWebPageClient milleniumWebPageClient;
+    private final MilleniumWebPageClient milleniumWebPageClient;
 
-    private ResponseParser responseParser = new ResponseParser();
+    private final ResponseParser responseParser;
 
-    public PasswordRequestStep(MilleniumWebPageClient milleniumWebPageClient) {
+    public PasswordRequestStep(MilleniumWebPageClient milleniumWebPageClient, ResponseParser responseParser) {
         this.milleniumWebPageClient = milleniumWebPageClient;
+        this.responseParser = responseParser;
     }
 
     public Connection.Response execute(MulticodeRequestStepOutput output, Session session, char[] pesel, char[] password) {

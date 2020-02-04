@@ -1,5 +1,6 @@
-package com.dawhey.challenge.util;
+package com.dawhey.challenge.unit.util;
 
+import com.dawhey.challenge.util.ResponseParser;
 import org.jsoup.Connection;
 import org.junit.jupiter.api.Test;
 

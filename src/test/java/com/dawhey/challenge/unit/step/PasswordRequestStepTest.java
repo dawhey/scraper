@@ -1,51 +1,34 @@
-package com.dawhey.challenge;
+package com.dawhey.challenge.unit.step;
+
+import com.dawhey.challenge.client.MilleniumWebPageClient;
+import com.dawhey.challenge.request.PasswordRequest;
+import com.dawhey.challenge.step.PasswordRequestStep;
+import com.dawhey.challenge.step.output.MulticodeRequestStepOutput;
+import com.dawhey.challenge.step.output.Session;
+import com.dawhey.challenge.util.ResponseParser;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
-import java.util.Map;
 
-public class TestUtil {
+import static com.dawhey.challenge.unit.TestUtil.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
-    public static final char[] PESEL = "12345678901".toCharArray();
 
-    public static final char[] PASSWORD = "123456x".toCharArray();
-
-    public static final char[] MILLEKOD = "123456x".toCharArray();
-
-    public static final String ACCOUNT_1_NAME = "Konto 360°";
-
-    public static final String ACCOUNT_2_NAME = "Konto 720°";
-
-    public static final String ACCOUNT_1_BALANCE = "12312.22";
-
-    public static final String ACCOUNT_2_BALANCE = "211342.33°";
+@ExtendWith(SpringExtension.class)
+class PasswordRequestStepTest {
 
     public static final String BOT_DETECTION_CLIENT_TOKEN = "7b1b3179-4afc-4d84-b187-73a596b45086";
 
     public static final String SECURITY_DIGITS_LOGIN_CHALLENGE = "7;1;";
 
     public static final String REQUEST_VERIFICATION_TOKEN = "E2I7aF4vwiJCfdWEq3s7XG3jbo1xmxaFHwvojwljHyBQ8XWBblsWmg0OhZjfs0wqo6Ahk1g_-aIdA7Ap5jx4NiNGl9k1";
-
-
-    public static final String MULTICODE_STEP_HTML = String.format("<input name='__RequestVerificationToken' " +
-            "type='hidden' value='%s'>", REQUEST_VERIFICATION_TOKEN);
-
-    public static final String ACCOUNT_PAGE_STEP_HTML = String.format("<div class='RowEven'>" +
-            "<div class='TemplateColumn col1 hidden-xs'><a class='MNHLink MNCommand TitleLink'>%s</a><br><span" +
-            "            class='MNText FullAccountNumber NumberSmallDescription Text' data-dateformat='yy-mm-dd'></span></div>" +
-            "<div class='TemplateColumn col2 AlignRight hidden-xs'><span class='MNText LargeAmount Amount'" +
-            "            data-currencydecimalseparator=',' data-currencygroupseparator='&nbsp;' data-dateformat='yy-mm-dd'" +
-            "            data-formattype='Amount' data-text='%s'><span class='val'></span><span class='cur'>" +
-            "                PLN</span></span></div>" +
-            "</div>" +
-            "<div class='RowEven'>" +
-            "<div class='TemplateColumn col1 hidden-xs'><a class='MNHLink MNCommand TitleLink'>%s</a><br><span" +
-            "            class='MNText FullAccountNumber NumberSmallDescription Text' data-dateformat=' yy-mm-dd'></span></div>" +
-            "<div class='TemplateColumn col2 AlignRight hidden-xs'><span class='MNText LargeAmount Amount'" +
-            "            data-currencydecimalseparator=',' data-currencygroupseparator='&nbsp;' data-dateformat='yy-mm-dd'" +
-            "            data-formattype='Amount' data-text='%s'><span class='val'></span><span class='cur'>" +
-            "                PLN</span></span></div>" +
-            "</div>", ACCOUNT_1_NAME, ACCOUNT_1_BALANCE, ACCOUNT_2_NAME, ACCOUNT_2_BALANCE);
-
 
     public static final String PASSWORD_STEP_HTML = String.format("<div class='SecurityDigits'>" +
             "        <input id='BotDetection_ClientToken' name='BotDetection.ClientToken' type='hidden'" +
@@ -130,18 +113,47 @@ public class TestUtil {
             "        </div>" +
             "</div>", BOT_DETECTION_CLIENT_TOKEN, REQUEST_VERIFICATION_TOKEN, SECURITY_DIGITS_LOGIN_CHALLENGE);
 
+    private PasswordRequestStep underTest;
 
-    public static Map<String, String> welcomePageCookies() {
-        var cookies = new HashMap<String, String>();
-        cookies.put("COOKIE_A", "VALUE_A");
-        cookies.put("COOKIE_B", "VALUE_B");
-        return cookies;
+    @Mock
+    private MilleniumWebPageClient milleniumWebPageClient;
+
+    @Mock
+    private ResponseParser responseParser;
+
+    @BeforeEach
+    public void setUp() {
+        underTest = new PasswordRequestStep(milleniumWebPageClient, responseParser);
     }
 
-    public static Map<String, String> signInCookies() {
-        var cookies = new HashMap<String, String>();
-        cookies.put("COOKIE_C", "VALUE_C");
-        cookies.put("COOKIE_D", "VALUE_D");
-        return cookies;
+    @Test
+    public void shouldPerformPasswordRequest_whenExecuted() {
+        //given
+        var responseMock = mock(Connection.Response.class);
+        when(responseMock.cookies()).thenReturn(signInCookies());
+        when(milleniumWebPageClient.performPasswordRequest(any())).thenReturn(responseMock);
+        when(responseParser.parse(any())).thenReturn(Jsoup.parse(PASSWORD_STEP_HTML));
+
+        //when
+        var result = underTest.execute(new MulticodeRequestStepOutput(any()), new Session(welcomePageCookies()), PESEL, PASSWORD);
+
+        //then
+        verify(milleniumWebPageClient).performPasswordRequest(passwordRequest());
+        assertTrue(result.cookies().entrySet().containsAll(signInCookies().entrySet()));
+    }
+
+    private PasswordRequest passwordRequest() {
+        var peselFormData = new HashMap<String, String>() {{
+            put("PESEL_1", "2");
+            put("PESEL_10", "1");
+        }};
+
+        return new PasswordRequest(
+                peselFormData,
+                REQUEST_VERIFICATION_TOKEN,
+                BOT_DETECTION_CLIENT_TOKEN,
+                SECURITY_DIGITS_LOGIN_CHALLENGE,
+                welcomePageCookies(),
+                PASSWORD);
     }
 }

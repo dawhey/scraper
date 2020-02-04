@@ -1,6 +1,7 @@
 package com.dawhey.challenge.request;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 import java.util.Map;
 
