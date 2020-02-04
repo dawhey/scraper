@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class WelcomePageStep {
 
-    private MilleniumWebPageClient milleniumWebPageClient;
+    private final MilleniumWebPageClient milleniumWebPageClient;
 
     public WelcomePageStep(MilleniumWebPageClient milleniumWebPageClient) {
         this.milleniumWebPageClient = milleniumWebPageClient;

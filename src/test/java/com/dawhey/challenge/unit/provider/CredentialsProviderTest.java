@@ -4,13 +4,11 @@ import com.dawhey.challenge.exception.NoCredentialsException;
 import com.dawhey.challenge.provider.CredentialsProvider;
 import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.env.PropertyResolver;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.dawhey.challenge.unit.TestUtil.*;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 
 class CredentialsProviderTest {
 
@@ -35,7 +33,6 @@ class CredentialsProviderTest {
     @Test
     public void shouldThrowException_whenOneOfPropertiesNotPassed() {
         //given
-        var source = mock(PropertyResolver.class);
         ReflectionTestUtils.setField(underTest, "millekod", String.valueOf(MILLEKOD));
         ReflectionTestUtils.setField(underTest, "pesel", null);
         ReflectionTestUtils.setField(underTest, "password", Strings.EMPTY);

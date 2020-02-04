@@ -8,4 +8,8 @@ import java.util.Map;
 public class Session {
 
     public final Map<String, String> cookies;
+
+    public void updateCookies(LoginStepOutput loginStepOutput) {
+        cookies.putAll(loginStepOutput.response.cookies());
+    }
 }

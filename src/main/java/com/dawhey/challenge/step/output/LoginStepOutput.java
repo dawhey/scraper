@@ -4,6 +4,6 @@ import lombok.AllArgsConstructor;
 import org.jsoup.Connection;
 
 @AllArgsConstructor
-public class StepOutput {
+public class LoginStepOutput {
     public final Connection.Response response;
 }

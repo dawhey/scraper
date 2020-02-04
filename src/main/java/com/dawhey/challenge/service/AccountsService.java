@@ -31,11 +31,11 @@ public class AccountsService {
         return extract(accountTableRows);
     }
 
-    private Set<Account> extract(List<Element> accountTableRows) {
+    private static Set<Account> extract(List<Element> accountTableRows) {
         return accountTableRows.stream().map(Account::new).collect(Collectors.toSet());
     }
 
-    private List<Element> findAccountBlockElements(ScraperDocument document) {
+    private static List<Element> findAccountBlockElements(ScraperDocument document) {
         return document.findElementsByClass("RowEven");
     }
 }

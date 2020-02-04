@@ -17,7 +17,7 @@ public class Credentials {
         this.pesel = fromString(pesel, "millenium.pesel");
     }
 
-    private char[] fromString(String property, String propertyName) {
+    private static char[] fromString(String property, String propertyName) {
         if (StringUtil.isBlank(property)) {
             throw new NoCredentialsException("No property with name *" + propertyName + "* passed to application.");
         }

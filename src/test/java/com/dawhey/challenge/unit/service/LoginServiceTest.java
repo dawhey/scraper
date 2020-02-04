@@ -7,6 +7,7 @@ import com.dawhey.challenge.step.MulticodeRequestStep;
 import com.dawhey.challenge.step.PasswordRequestStep;
 import com.dawhey.challenge.step.WelcomePageStep;
 import com.dawhey.challenge.step.output.MulticodeRequestStepOutput;
+import com.dawhey.challenge.step.output.PasswordRequestStepOutput;
 import com.dawhey.challenge.step.output.WelcomePageStepResultOutput;
 import com.dawhey.challenge.util.ResponseParser;
 import com.dawhey.challenge.util.ScraperDocument;
@@ -98,7 +99,7 @@ class LoginServiceTest {
         underTest = new LoginService(welcomePageStep, multicodeRequestStep, passwordRequestStep, responseParser);
         when(welcomePageStep.execute()).thenReturn(new WelcomePageStepResultOutput(someResponse));
         when(multicodeRequestStep.execute(any(), any(), any())).thenReturn(new MulticodeRequestStepOutput(someResponse));
-        when(passwordRequestStep.execute(any(), any(), any(), any())).thenReturn(passwordResponseMock);
+        when(passwordRequestStep.execute(any(), any(), any(), any())).thenReturn(new PasswordRequestStepOutput(passwordResponseMock));
     }
 
     @Test

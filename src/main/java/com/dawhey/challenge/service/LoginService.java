@@ -34,16 +34,16 @@ public class LoginService {
     public Session login(Credentials credentials) {
         var session = new Session(new HashMap<>());
 
-        var welcomePageStepOutput = welcomePageStep.execute();
-        session.cookies.putAll(welcomePageStepOutput.response.cookies());
+        var welcomePageOutput = welcomePageStep.execute();
+        session.updateCookies(welcomePageOutput);
 
-        var multicodeRequestStepOutput = multicodeRequestStep.execute(welcomePageStepOutput, session, credentials.millekod);
-        session.cookies.putAll(multicodeRequestStepOutput.response.cookies());
+        var multicodeOutput = multicodeRequestStep.execute(welcomePageOutput, session, credentials.millekod);
+        session.updateCookies(multicodeOutput);
 
-        var response = passwordRequestStep.execute(multicodeRequestStepOutput, session, credentials.pesel, credentials.password);
-        session.cookies.putAll(response.cookies());
+        var passwordOutput = passwordRequestStep.execute(multicodeOutput, session, credentials.pesel, credentials.password);
+        session.updateCookies(passwordOutput);
 
-        verifyIfUserLoggedIn(response);
+        verifyIfUserLoggedIn(passwordOutput.response);
         return session;
     }
 
@@ -54,7 +54,7 @@ public class LoginService {
         }
     }
 
-    private boolean logoutButtonExist(ScraperDocument scraperDocument) {
+    private static boolean logoutButtonExist(ScraperDocument scraperDocument) {
         var logoutDivs = scraperDocument.findElementsBySelector("div[data-element-id~=logout]");
         return !logoutDivs.isEmpty();
     }
