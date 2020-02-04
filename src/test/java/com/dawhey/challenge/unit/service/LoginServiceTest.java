@@ -9,6 +9,7 @@ import com.dawhey.challenge.step.WelcomePageStep;
 import com.dawhey.challenge.step.output.MulticodeRequestStepOutput;
 import com.dawhey.challenge.step.output.WelcomePageStepResultOutput;
 import com.dawhey.challenge.util.ResponseParser;
+import com.dawhey.challenge.util.ScraperDocument;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
@@ -102,13 +103,13 @@ class LoginServiceTest {
 
     @Test
     public void shouldPassLoginValidation_whenLogoutButtonExist() {
-        when(responseParser.parse(passwordResponseMock)).thenReturn(Jsoup.parse(HTML_WITH_LOGOUT_BUTTON));
+        when(responseParser.parse(passwordResponseMock)).thenReturn(new ScraperDocument(Jsoup.parse(HTML_WITH_LOGOUT_BUTTON)));
         assertDoesNotThrow(() -> underTest.login(new Credentials("some-millekod", "some-password", "some-pesel")));
     }
 
     @Test
     public void shouldFailLoginValidation_whenNoLogoutButtonExists() {
-        when(responseParser.parse(passwordResponseMock)).thenReturn(Jsoup.parse(HTML_WITHOUT_LOGOUT_BUTTON));
+        when(responseParser.parse(passwordResponseMock)).thenReturn(new ScraperDocument(Jsoup.parse(HTML_WITHOUT_LOGOUT_BUTTON)));
         assertThrows(LoginFailureException.class, () -> underTest.login(new Credentials("some-millekod", "some-password", "some-pesel")));
     }
 }

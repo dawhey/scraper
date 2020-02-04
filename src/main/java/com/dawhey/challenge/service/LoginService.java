@@ -48,7 +48,8 @@ public class LoginService {
     }
 
     private void verifyIfUserLoggedIn(Connection.Response response) {
-        if (!logoutButtonExist(new ScraperDocument(responseParser, response))) {
+        var document = responseParser.parse(response);
+        if (!logoutButtonExist(document)) {
             throw new LoginFailureException("Failed to log in. Make sure you're passing the right credentials.");
         }
     }

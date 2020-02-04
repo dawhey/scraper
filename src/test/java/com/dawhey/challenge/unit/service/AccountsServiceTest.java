@@ -5,6 +5,7 @@ import com.dawhey.challenge.client.RequestParams;
 import com.dawhey.challenge.service.AccountsService;
 import com.dawhey.challenge.step.output.Session;
 import com.dawhey.challenge.util.ResponseParser;
+import com.dawhey.challenge.util.ScraperDocument;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,7 +67,7 @@ class AccountsServiceTest {
         //given
         var response = mock(Connection.Response.class);
         when(response.url()).thenReturn(new URL(RequestParams.MILLENIUM_BASE_URL + "osobiste/"));
-        when(responseParser.parse(any())).thenReturn(Jsoup.parse(ACCOUNT_PAGE_STEP_HTML));
+        when(responseParser.parse(any())).thenReturn(new ScraperDocument(Jsoup.parse(ACCOUNT_PAGE_STEP_HTML)));
 
         //when
         var accounts = underTest.extractAccounts(new Session(null));

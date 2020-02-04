@@ -6,6 +6,7 @@ import com.dawhey.challenge.step.PasswordRequestStep;
 import com.dawhey.challenge.step.output.MulticodeRequestStepOutput;
 import com.dawhey.challenge.step.output.Session;
 import com.dawhey.challenge.util.ResponseParser;
+import com.dawhey.challenge.util.ScraperDocument;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
@@ -132,7 +133,7 @@ class PasswordRequestStepTest {
         var responseMock = mock(Connection.Response.class);
         when(responseMock.cookies()).thenReturn(signInCookies());
         when(milleniumWebPageClient.performPasswordRequest(any())).thenReturn(responseMock);
-        when(responseParser.parse(any())).thenReturn(Jsoup.parse(PASSWORD_STEP_HTML));
+        when(responseParser.parse(any())).thenReturn(new ScraperDocument(Jsoup.parse(PASSWORD_STEP_HTML)));
 
         //when
         var result = underTest.execute(new MulticodeRequestStepOutput(any()), new Session(welcomePageCookies()), PESEL, PASSWORD);

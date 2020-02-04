@@ -1,6 +1,5 @@
 package com.dawhey.challenge.util;
 
-import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -10,8 +9,8 @@ public class ScraperDocument {
 
     private final Document document;
 
-    public ScraperDocument(ResponseParser parser, Connection.Response response) {
-        this.document = parser.parse(response);
+    public ScraperDocument(Document document) {
+        this.document = document;
     }
 
     public String findValueOfInputByName(String inputName) {

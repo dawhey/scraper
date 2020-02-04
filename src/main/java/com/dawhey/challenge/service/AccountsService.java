@@ -26,7 +26,7 @@ public class AccountsService {
 
     public Set<Account> extractAccounts(Session session) {
         var response = milleniumWebPageClient.getAccountListPage(session.cookies);
-        var document = new ScraperDocument(responseParser, response);
+        var document = responseParser.parse(response);
         var accountTableRows = findAccountBlockElements(document);
         return extract(accountTableRows);
     }

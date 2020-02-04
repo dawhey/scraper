@@ -7,6 +7,7 @@ import com.dawhey.challenge.step.output.Session;
 import com.dawhey.challenge.step.output.WelcomePageStepResultOutput;
 import com.dawhey.challenge.unit.TestUtil;
 import com.dawhey.challenge.util.ResponseParser;
+import com.dawhey.challenge.util.ScraperDocument;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ class MulticodeRequestStepTest {
     @Test
     public void shouldPerformMultiCodeRequest_whenExecuted() {
         //given
-        when(responseParser.parse(any())).thenReturn(Jsoup.parse(MULTICODE_STEP_HTML));
+        when(responseParser.parse(any())).thenReturn(new ScraperDocument(Jsoup.parse(MULTICODE_STEP_HTML)));
 
         //when
         underTest.execute(new WelcomePageStepResultOutput(null), new Session(TestUtil.welcomePageCookies()), MILLEKOD);

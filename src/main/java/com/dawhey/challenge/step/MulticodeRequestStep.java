@@ -7,7 +7,6 @@ import com.dawhey.challenge.step.output.MulticodeRequestStepOutput;
 import com.dawhey.challenge.step.output.Session;
 import com.dawhey.challenge.step.output.WelcomePageStepResultOutput;
 import com.dawhey.challenge.util.ResponseParser;
-import com.dawhey.challenge.util.ScraperDocument;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,7 +22,7 @@ public class MulticodeRequestStep {
     }
 
     public MulticodeRequestStepOutput execute(WelcomePageStepResultOutput output, Session session, char[] millekod) {
-        var requestVerificationTokenValue = new ScraperDocument(responseParser, output.response)
+        var requestVerificationTokenValue = responseParser.parse(output.response)
                 .findValueOfInputByName(RequestParams.VERIFICATION_TOKEN_PARAM);
 
         var requestData = new MulticodeRequest(session.cookies, requestVerificationTokenValue, millekod);
