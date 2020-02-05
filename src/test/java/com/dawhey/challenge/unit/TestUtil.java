@@ -18,6 +18,13 @@ public class TestUtil {
         return cookies;
     }
 
+    public static Map<String, String> multicodeCookies() {
+        var cookies = new HashMap<String, String>();
+        cookies.put("COOKIE_E", "VALUE_E");
+        cookies.put("COOKIE_F", "VALUE_F");
+        return cookies;
+    }
+
     public static Map<String, String> signInCookies() {
         var cookies = new HashMap<String, String>();
         cookies.put("COOKIE_C", "VALUE_C");

@@ -19,8 +19,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static com.dawhey.challenge.unit.TestUtil.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -92,13 +92,16 @@ class LoginServiceTest {
     private Connection.Response passwordResponseMock;
 
     @Mock
-    private Connection.Response someResponse;
+    private Connection.Response multicodeResponseMock;
+
+    @Mock
+    private Connection.Response welcomePageResponseMock;
 
     @BeforeEach
     public void setUp() {
         underTest = new LoginService(welcomePageStep, multicodeRequestStep, passwordRequestStep, responseParser);
-        when(welcomePageStep.execute()).thenReturn(new WelcomePageStepResultOutput(someResponse));
-        when(multicodeRequestStep.execute(any(), any(), any())).thenReturn(new MulticodeRequestStepOutput(someResponse));
+        when(welcomePageStep.execute()).thenReturn(new WelcomePageStepResultOutput(welcomePageResponseMock));
+        when(multicodeRequestStep.execute(any(), any(), any())).thenReturn(new MulticodeRequestStepOutput(multicodeResponseMock));
         when(passwordRequestStep.execute(any(), any(), any(), any())).thenReturn(new PasswordRequestStepOutput(passwordResponseMock));
     }
 
@@ -112,5 +115,22 @@ class LoginServiceTest {
     public void shouldFailLoginValidation_whenNoLogoutButtonExists() {
         when(responseParser.parse(passwordResponseMock)).thenReturn(new ScraperDocument(Jsoup.parse(HTML_WITHOUT_LOGOUT_BUTTON)));
         assertThrows(LoginFailureException.class, () -> underTest.login(new Credentials("some-millekod", "some-password", "some-pesel")));
+    }
+
+    @Test
+    public void shouldReturnJoinedCookiesSession_whenCalled() {
+        //given
+        when(responseParser.parse(passwordResponseMock)).thenReturn(new ScraperDocument(Jsoup.parse(HTML_WITH_LOGOUT_BUTTON)));
+        when(welcomePageResponseMock.cookies()).thenReturn(welcomePageCookies());
+        when(multicodeResponseMock.cookies()).thenReturn(multicodeCookies());
+        when(passwordResponseMock.cookies()).thenReturn(signInCookies());
+
+        //when
+        var session = underTest.login(new Credentials("some-millekod", "some-password", "some-pesel"));
+
+        //then
+        assertTrue(session.cookies.values().containsAll(welcomePageCookies().values()));
+        assertTrue(session.cookies.values().containsAll(multicodeCookies().values()));
+        assertTrue(session.cookies.values().containsAll(signInCookies().values()));
     }
 }
