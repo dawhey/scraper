@@ -12,10 +12,12 @@ import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.dawhey.challenge.unit.TestUtil.MILLEKOD;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,16 +46,18 @@ class MulticodeRequestStepTest {
     @Test
     public void shouldPerformMultiCodeRequest_whenExecuted() {
         //given
+        var requestCaptor = ArgumentCaptor.forClass(MulticodeRequest.class);
         when(responseParser.parse(any())).thenReturn(new ScraperDocument(Jsoup.parse(MULTICODE_STEP_HTML)));
 
         //when
         underTest.execute(new WelcomePageStepResultOutput(null), new Session(TestUtil.welcomePageCookies()), MILLEKOD);
 
         //then
-        verify(milleniumWebPageClient).performMultiCodeRequest(multicodeRequest());
-    }
+        verify(milleniumWebPageClient).performMultiCodeRequest(requestCaptor.capture());
+        var request = requestCaptor.getValue();
 
-    private MulticodeRequest multicodeRequest() {
-        return new MulticodeRequest(TestUtil.welcomePageCookies(), REQUEST_VERIFICATION_TOKEN, MILLEKOD);
+        assertEquals(TestUtil.welcomePageCookies(), request.cookies);
+        assertEquals(MILLEKOD, request.millekod);
+        assertEquals(REQUEST_VERIFICATION_TOKEN, request.verificationTokenValue);
     }
 }

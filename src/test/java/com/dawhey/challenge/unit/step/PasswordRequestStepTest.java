@@ -12,12 +12,15 @@ import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static com.dawhey.challenge.unit.TestUtil.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -130,6 +133,7 @@ class PasswordRequestStepTest {
     @Test
     public void shouldPerformPasswordRequest_whenExecuted() {
         //given
+        var requestCaptor = ArgumentCaptor.forClass(PasswordRequest.class);
         var responseMock = mock(Connection.Response.class);
         when(responseMock.cookies()).thenReturn(signInCookies());
         when(milleniumWebPageClient.performPasswordRequest(any())).thenReturn(responseMock);
@@ -139,22 +143,23 @@ class PasswordRequestStepTest {
         var result = underTest.execute(new MulticodeRequestStepOutput(any()), new Session(welcomePageCookies()), PESEL, PASSWORD);
 
         //then
-        verify(milleniumWebPageClient).performPasswordRequest(passwordRequest());
+        verify(milleniumWebPageClient).performPasswordRequest(requestCaptor.capture());
+        var request = requestCaptor.getValue();
+
+        assertEquals(REQUEST_VERIFICATION_TOKEN, request.requestVerificationToken);
+        assertEquals(BOT_DETECTION_CLIENT_TOKEN, request.botDetectionClientToken);
+        assertEquals(SECURITY_DIGITS_LOGIN_CHALLENGE, request.securityDigitsLoginChallengeToken);
+        assertEquals(welcomePageCookies(), request.cookies);
+        assertEquals(PASSWORD, request.password);
+        assertEquals(peselFormData(), request.peselFormData);
+
         assertTrue(result.response.cookies().entrySet().containsAll(signInCookies().entrySet()));
     }
 
-    private PasswordRequest passwordRequest() {
-        var peselFormData = new HashMap<String, String>() {{
+    private Map<String, String> peselFormData() {
+        return new HashMap<>() {{
             put("PESEL_1", "2");
             put("PESEL_10", "1");
         }};
-
-        return new PasswordRequest(
-                peselFormData,
-                REQUEST_VERIFICATION_TOKEN,
-                BOT_DETECTION_CLIENT_TOKEN,
-                SECURITY_DIGITS_LOGIN_CHALLENGE,
-                welcomePageCookies(),
-                PASSWORD);
     }
 }

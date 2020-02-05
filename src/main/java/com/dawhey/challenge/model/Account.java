@@ -1,11 +1,9 @@
 package com.dawhey.challenge.model;
 
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.jsoup.nodes.Element;
 
 @ToString
-@EqualsAndHashCode
 public class Account {
 
     public final String name;

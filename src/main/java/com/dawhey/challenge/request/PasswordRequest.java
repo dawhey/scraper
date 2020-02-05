@@ -2,7 +2,6 @@ package com.dawhey.challenge.request;
 
 import com.dawhey.challenge.client.RequestParams;
 import com.dawhey.challenge.util.ScraperDocument;
-import lombok.EqualsAndHashCode;
 import org.apache.logging.log4j.util.Strings;
 import org.jsoup.nodes.Element;
 
@@ -11,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@EqualsAndHashCode
 public class PasswordRequest {
 
     public final Map<String, String> peselFormData;
