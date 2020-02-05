@@ -32,7 +32,21 @@ public class AccountsService {
     }
 
     private static Set<Account> extract(List<Element> accountTableRows) {
-        return accountTableRows.stream().map(Account::new).collect(Collectors.toSet());
+        return accountTableRows.stream()
+                .map(e -> new Account(extractAccountName(e), extractAccountBalance(e)))
+                .collect(Collectors.toSet());
+    }
+
+    private static String extractAccountName(Element e) {
+        return e.getElementsByTag("a").first().text();
+    }
+
+    private static String extractAccountBalance(Element e) {
+        return e.getElementsByClass("col2")
+                .first()
+                .getElementsByTag("span")
+                .first()
+                .attr("data-text");
     }
 
     private static List<Element> findAccountBlockElements(ScraperDocument document) {
