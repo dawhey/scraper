@@ -1,9 +1,9 @@
 package com.dawhey.challenge.step.output;
 
-import org.jsoup.Connection;
+import com.dawhey.challenge.model.Response;
 
 public class PasswordRequestStepOutput extends LoginStepOutput {
-    public PasswordRequestStepOutput(Connection.Response response) {
+    public PasswordRequestStepOutput(Response response) {
         super(response);
     }
 }

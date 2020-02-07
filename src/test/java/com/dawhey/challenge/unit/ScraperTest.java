@@ -47,6 +47,5 @@ class ScraperTest {
         assertArrayEquals(MILLEKOD, credentials.millekod);
         assertArrayEquals(PASSWORD, credentials.password);
         assertArrayEquals(PESEL, credentials.pesel);
-
     }
 }

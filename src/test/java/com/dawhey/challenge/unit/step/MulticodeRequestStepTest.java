@@ -1,12 +1,12 @@
 package com.dawhey.challenge.unit.step;
 
 import com.dawhey.challenge.client.MilleniumWebPageClient;
+import com.dawhey.challenge.model.Response;
 import com.dawhey.challenge.request.MulticodeRequest;
 import com.dawhey.challenge.step.MulticodeRequestStep;
 import com.dawhey.challenge.step.output.Session;
 import com.dawhey.challenge.step.output.WelcomePageStepResultOutput;
 import com.dawhey.challenge.unit.TestUtil;
-import com.dawhey.challenge.util.ResponseParser;
 import com.dawhey.challenge.util.ScraperDocument;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,12 +18,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.dawhey.challenge.unit.TestUtil.MILLEKOD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-class MulticodeRequestStepTest {
+class MulticodeRequestSwtepTest {
 
     public static final String REQUEST_VERIFICATION_TOKEN = "E2I7aF4vwiJCfdWEq3s7XG3jbo1xmxaFHwvojwljHyBQ8XWBblsWmg0OhZjfs0wqo6Ahk1g_-aIdA7Ap5jx4NiNGl9k1";
 
@@ -35,22 +33,19 @@ class MulticodeRequestStepTest {
     @Mock
     private MilleniumWebPageClient milleniumWebPageClient;
 
-    @Mock
-    private ResponseParser responseParser;
-
     @BeforeEach
     public void setUp() {
-        underTest = new MulticodeRequestStep(milleniumWebPageClient, responseParser);
+        underTest = new MulticodeRequestStep(milleniumWebPageClient);
     }
 
     @Test
     public void shouldPerformMultiCodeRequest_whenExecuted() {
         //given
         var requestCaptor = ArgumentCaptor.forClass(MulticodeRequest.class);
-        when(responseParser.parse(any())).thenReturn(new ScraperDocument(Jsoup.parse(MULTICODE_STEP_HTML)));
+        var previousOutput = new WelcomePageStepResultOutput(new Response(null, new ScraperDocument(Jsoup.parse(MULTICODE_STEP_HTML))));
 
         //when
-        underTest.execute(new WelcomePageStepResultOutput(null), new Session(TestUtil.welcomePageCookies()), MILLEKOD);
+        underTest.execute(previousOutput, new Session(TestUtil.welcomePageCookies()), MILLEKOD);
 
         //then
         verify(milleniumWebPageClient).performMultiCodeRequest(requestCaptor.capture());

@@ -2,6 +2,7 @@ package com.dawhey.challenge.unit.service;
 
 import com.dawhey.challenge.exception.LoginFailureException;
 import com.dawhey.challenge.model.Credentials;
+import com.dawhey.challenge.model.Response;
 import com.dawhey.challenge.service.LoginService;
 import com.dawhey.challenge.step.MulticodeRequestStep;
 import com.dawhey.challenge.step.PasswordRequestStep;
@@ -9,9 +10,7 @@ import com.dawhey.challenge.step.WelcomePageStep;
 import com.dawhey.challenge.step.output.MulticodeRequestStepOutput;
 import com.dawhey.challenge.step.output.PasswordRequestStepOutput;
 import com.dawhey.challenge.step.output.WelcomePageStepResultOutput;
-import com.dawhey.challenge.util.ResponseParser;
 import com.dawhey.challenge.util.ScraperDocument;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -85,50 +84,39 @@ class LoginServiceTest {
     @Mock
     private PasswordRequestStep passwordRequestStep;
 
-    @Mock
-    private ResponseParser responseParser;
-
-    @Mock
-    private Connection.Response passwordResponseMock;
-
-    @Mock
-    private Connection.Response multicodeResponseMock;
-
-    @Mock
-    private Connection.Response welcomePageResponseMock;
+    private Response passwordResponseStub;
 
     @BeforeEach
     public void setUp() {
-        underTest = new LoginService(welcomePageStep, multicodeRequestStep, passwordRequestStep, responseParser);
-        when(welcomePageStep.execute()).thenReturn(new WelcomePageStepResultOutput(welcomePageResponseMock));
-        when(multicodeRequestStep.execute(any(), any(), any())).thenReturn(new MulticodeRequestStepOutput(multicodeResponseMock));
-        when(passwordRequestStep.execute(any(), any(), any(), any())).thenReturn(new PasswordRequestStepOutput(passwordResponseMock));
+        underTest = new LoginService(welcomePageStep, multicodeRequestStep, passwordRequestStep);
+
+        var welcomePageResponseStub = new Response(welcomePageCookies(), null);
+        var multicodeResponseStub = new Response(multicodeCookies(), null);
+        passwordResponseStub = new Response(signInCookies(), new ScraperDocument(Jsoup.parse(HTML_WITH_LOGOUT_BUTTON)));
+
+        when(welcomePageStep.execute()).thenReturn(new WelcomePageStepResultOutput(welcomePageResponseStub));
+        when(multicodeRequestStep.execute(any(), any(), any())).thenReturn(new MulticodeRequestStepOutput(multicodeResponseStub));
+        when(passwordRequestStep.execute(any(), any(), any(), any())).thenReturn(new PasswordRequestStepOutput(passwordResponseStub));
+
     }
 
     @Test
     public void shouldPassLoginValidation_whenLogoutButtonExist() {
-        when(responseParser.parse(passwordResponseMock)).thenReturn(new ScraperDocument(Jsoup.parse(HTML_WITH_LOGOUT_BUTTON)));
         assertDoesNotThrow(() -> underTest.login(new Credentials("some-millekod", "some-password", "some-pesel")));
     }
 
     @Test
     public void shouldFailLoginValidation_whenNoLogoutButtonExists() {
-        when(responseParser.parse(passwordResponseMock)).thenReturn(new ScraperDocument(Jsoup.parse(HTML_WITHOUT_LOGOUT_BUTTON)));
+        passwordResponseStub = new Response(signInCookies(), new ScraperDocument(Jsoup.parse(HTML_WITHOUT_LOGOUT_BUTTON)));
+        when(passwordRequestStep.execute(any(), any(), any(), any())).thenReturn(new PasswordRequestStepOutput(passwordResponseStub));
+
         assertThrows(LoginFailureException.class, () -> underTest.login(new Credentials("some-millekod", "some-password", "some-pesel")));
     }
 
     @Test
     public void shouldReturnJoinedCookiesSession_whenCalled() {
-        //given
-        when(responseParser.parse(passwordResponseMock)).thenReturn(new ScraperDocument(Jsoup.parse(HTML_WITH_LOGOUT_BUTTON)));
-        when(welcomePageResponseMock.cookies()).thenReturn(welcomePageCookies());
-        when(multicodeResponseMock.cookies()).thenReturn(multicodeCookies());
-        when(passwordResponseMock.cookies()).thenReturn(signInCookies());
-
-        //when
         var session = underTest.login(new Credentials("some-millekod", "some-password", "some-pesel"));
 
-        //then
         assertTrue(session.cookies.values().containsAll(welcomePageCookies().values()));
         assertTrue(session.cookies.values().containsAll(multicodeCookies().values()));
         assertTrue(session.cookies.values().containsAll(signInCookies().values()));

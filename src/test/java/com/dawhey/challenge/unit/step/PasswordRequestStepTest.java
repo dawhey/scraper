@@ -1,13 +1,12 @@
 package com.dawhey.challenge.unit.step;
 
 import com.dawhey.challenge.client.MilleniumWebPageClient;
+import com.dawhey.challenge.model.Response;
 import com.dawhey.challenge.request.PasswordRequest;
 import com.dawhey.challenge.step.PasswordRequestStep;
 import com.dawhey.challenge.step.output.MulticodeRequestStepOutput;
 import com.dawhey.challenge.step.output.Session;
-import com.dawhey.challenge.util.ResponseParser;
 import com.dawhey.challenge.util.ScraperDocument;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,8 +20,7 @@ import java.util.Map;
 
 import static com.dawhey.challenge.unit.TestUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 
 @ExtendWith(SpringExtension.class)
@@ -122,25 +120,19 @@ class PasswordRequestStepTest {
     @Mock
     private MilleniumWebPageClient milleniumWebPageClient;
 
-    @Mock
-    private ResponseParser responseParser;
-
     @BeforeEach
     public void setUp() {
-        underTest = new PasswordRequestStep(milleniumWebPageClient, responseParser);
+        underTest = new PasswordRequestStep(milleniumWebPageClient);
     }
 
     @Test
-    public void shouldPerformPasswordRequest_whenExecuted() {
+    public void shouldBuildCorrectPasswordRequest_whenExecuted() {
         //given
         var requestCaptor = ArgumentCaptor.forClass(PasswordRequest.class);
-        var responseMock = mock(Connection.Response.class);
-        when(responseMock.cookies()).thenReturn(signInCookies());
-        when(milleniumWebPageClient.performPasswordRequest(any())).thenReturn(responseMock);
-        when(responseParser.parse(any())).thenReturn(new ScraperDocument(Jsoup.parse(PASSWORD_STEP_HTML)));
+        var previousResponseStub = new Response(multicodeCookies(), new ScraperDocument(Jsoup.parse(PASSWORD_STEP_HTML)));
 
         //when
-        var result = underTest.execute(new MulticodeRequestStepOutput(any()), new Session(welcomePageCookies()), PESEL, PASSWORD);
+        underTest.execute(new MulticodeRequestStepOutput(previousResponseStub), new Session(welcomePageCookies()), PESEL, PASSWORD);
 
         //then
         verify(milleniumWebPageClient).performPasswordRequest(requestCaptor.capture());
@@ -152,11 +144,9 @@ class PasswordRequestStepTest {
         assertEquals(welcomePageCookies(), request.cookies);
         assertEquals(PASSWORD, request.password);
         assertEquals(peselFormData(), request.peselFormData);
-
-        assertTrue(result.response.cookies().entrySet().containsAll(signInCookies().entrySet()));
     }
 
-    private Map<String, String> peselFormData() {
+    private static Map<String, String> peselFormData() {
         return new HashMap<>() {{
             put("PESEL_1", "2");
             put("PESEL_10", "1");

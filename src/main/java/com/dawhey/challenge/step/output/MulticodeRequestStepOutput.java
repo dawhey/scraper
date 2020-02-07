@@ -1,9 +1,9 @@
 package com.dawhey.challenge.step.output;
 
-import org.jsoup.Connection;
+import com.dawhey.challenge.model.Response;
 
 public class MulticodeRequestStepOutput extends LoginStepOutput {
-    public MulticodeRequestStepOutput(Connection.Response response) {
+    public MulticodeRequestStepOutput(Response response) {
         super(response);
     }
 }

@@ -1,12 +1,10 @@
 package com.dawhey.challenge.unit.service;
 
 import com.dawhey.challenge.client.MilleniumWebPageClient;
-import com.dawhey.challenge.client.RequestParams;
+import com.dawhey.challenge.model.Response;
 import com.dawhey.challenge.service.AccountsService;
 import com.dawhey.challenge.step.output.Session;
-import com.dawhey.challenge.util.ResponseParser;
 import com.dawhey.challenge.util.ScraperDocument;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,12 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 class AccountsServiceTest {
@@ -50,24 +46,19 @@ class AccountsServiceTest {
             "</div>", ACCOUNT_1_NAME, ACCOUNT_1_BALANCE, ACCOUNT_2_NAME, ACCOUNT_2_BALANCE);
 
     @Mock
-    private ResponseParser responseParser;
-
-    @Mock
     private MilleniumWebPageClient webPageClient;
 
     private AccountsService underTest;
 
     @BeforeEach
     public void setUp() {
-        underTest = new AccountsService(webPageClient, responseParser);
+        underTest = new AccountsService(webPageClient);
     }
 
     @Test
-    public void shouldExtractAccountSet_whenProvidedWithCorrectHtml() throws MalformedURLException {
+    public void shouldExtractAccountSet_whenProvidedWithCorrectHtml() {
         //given
-        var response = mock(Connection.Response.class);
-        when(response.url()).thenReturn(new URL(RequestParams.MILLENIUM_BASE_URL + "osobiste/"));
-        when(responseParser.parse(any())).thenReturn(new ScraperDocument(Jsoup.parse(ACCOUNT_PAGE_STEP_HTML)));
+        when(webPageClient.getAccountListPage(any())).thenReturn(new Response(null, new ScraperDocument(Jsoup.parse(ACCOUNT_PAGE_STEP_HTML))));
 
         //when
         var accounts = underTest.extractAccounts(new Session(null));

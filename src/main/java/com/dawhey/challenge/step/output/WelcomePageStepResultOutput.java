@@ -1,9 +1,9 @@
 package com.dawhey.challenge.step.output;
 
-import org.jsoup.Connection;
+import com.dawhey.challenge.model.Response;
 
 public class WelcomePageStepResultOutput extends LoginStepOutput {
-    public WelcomePageStepResultOutput(Connection.Response response) {
+    public WelcomePageStepResultOutput(Response response) {
         super(response);
     }
 }

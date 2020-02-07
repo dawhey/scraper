@@ -3,7 +3,6 @@ package com.dawhey.challenge.service;
 import com.dawhey.challenge.client.MilleniumWebPageClient;
 import com.dawhey.challenge.model.Account;
 import com.dawhey.challenge.step.output.Session;
-import com.dawhey.challenge.util.ResponseParser;
 import com.dawhey.challenge.util.ScraperDocument;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
@@ -17,18 +16,18 @@ public class AccountsService {
 
     private final MilleniumWebPageClient milleniumWebPageClient;
 
-    private final ResponseParser responseParser;
-
-    public AccountsService(MilleniumWebPageClient milleniumWebPageClient, ResponseParser responseParser) {
+    public AccountsService(MilleniumWebPageClient milleniumWebPageClient) {
         this.milleniumWebPageClient = milleniumWebPageClient;
-        this.responseParser = responseParser;
     }
 
     public Set<Account> extractAccounts(Session session) {
         var response = milleniumWebPageClient.getAccountListPage(session.cookies);
-        var document = responseParser.parse(response);
-        var accountTableRows = findAccountBlockElements(document);
+        var accountTableRows = findAccountBlockElements(response.document);
         return extract(accountTableRows);
+    }
+
+    private static List<Element> findAccountBlockElements(ScraperDocument document) {
+        return document.findElementsByClass("RowEven");
     }
 
     private static Set<Account> extract(List<Element> accountTableRows) {
@@ -47,9 +46,5 @@ public class AccountsService {
                 .getElementsByTag("span")
                 .first()
                 .attr("data-text");
-    }
-
-    private static List<Element> findAccountBlockElements(ScraperDocument document) {
-        return document.findElementsByClass("RowEven");
     }
 }
