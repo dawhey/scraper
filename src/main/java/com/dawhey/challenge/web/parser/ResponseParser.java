@@ -1,4 +1,4 @@
-package com.dawhey.challenge.util;
+package com.dawhey.challenge.web.parser;
 
 import org.jsoup.Connection;
 import org.springframework.stereotype.Component;

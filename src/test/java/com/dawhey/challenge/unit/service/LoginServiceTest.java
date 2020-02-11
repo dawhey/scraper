@@ -2,7 +2,6 @@ package com.dawhey.challenge.unit.service;
 
 import com.dawhey.challenge.exception.LoginFailureException;
 import com.dawhey.challenge.model.Credentials;
-import com.dawhey.challenge.model.Response;
 import com.dawhey.challenge.service.LoginService;
 import com.dawhey.challenge.step.MulticodeRequestStep;
 import com.dawhey.challenge.step.PasswordRequestStep;
@@ -10,7 +9,8 @@ import com.dawhey.challenge.step.WelcomePageStep;
 import com.dawhey.challenge.step.output.MulticodeRequestStepOutput;
 import com.dawhey.challenge.step.output.PasswordRequestStepOutput;
 import com.dawhey.challenge.step.output.WelcomePageStepResultOutput;
-import com.dawhey.challenge.util.ScraperDocument;
+import com.dawhey.challenge.web.parser.ScraperDocument;
+import com.dawhey.challenge.web.response.Response;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

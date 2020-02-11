@@ -1,6 +1,6 @@
 package com.dawhey.challenge.unit.util;
 
-import com.dawhey.challenge.util.ScraperDocument;
+import com.dawhey.challenge.web.parser.ScraperDocument;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.Test;
 

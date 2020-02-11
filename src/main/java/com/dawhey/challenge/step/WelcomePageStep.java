@@ -1,7 +1,7 @@
 package com.dawhey.challenge.step;
 
-import com.dawhey.challenge.client.MilleniumWebPageClient;
 import com.dawhey.challenge.step.output.WelcomePageStepResultOutput;
+import com.dawhey.challenge.web.client.MilleniumWebPageClient;
 import org.springframework.stereotype.Component;
 
 @Component

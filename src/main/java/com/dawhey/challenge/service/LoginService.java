@@ -2,12 +2,12 @@ package com.dawhey.challenge.service;
 
 import com.dawhey.challenge.exception.LoginFailureException;
 import com.dawhey.challenge.model.Credentials;
-import com.dawhey.challenge.model.Response;
 import com.dawhey.challenge.step.MulticodeRequestStep;
 import com.dawhey.challenge.step.PasswordRequestStep;
 import com.dawhey.challenge.step.WelcomePageStep;
 import com.dawhey.challenge.step.output.Session;
-import com.dawhey.challenge.util.ScraperDocument;
+import com.dawhey.challenge.web.parser.ScraperDocument;
+import com.dawhey.challenge.web.response.Response;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

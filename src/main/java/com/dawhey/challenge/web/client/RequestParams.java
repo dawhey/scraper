@@ -1,4 +1,4 @@
-package com.dawhey.challenge.client;
+package com.dawhey.challenge.web.client;
 
 public class RequestParams {
 

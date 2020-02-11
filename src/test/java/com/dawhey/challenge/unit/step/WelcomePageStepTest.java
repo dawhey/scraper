@@ -1,9 +1,9 @@
 package com.dawhey.challenge.unit.step;
 
-import com.dawhey.challenge.client.MilleniumWebPageClient;
-import com.dawhey.challenge.model.Response;
 import com.dawhey.challenge.step.WelcomePageStep;
 import com.dawhey.challenge.unit.TestUtil;
+import com.dawhey.challenge.web.client.MilleniumWebPageClient;
+import com.dawhey.challenge.web.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

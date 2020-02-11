@@ -1,6 +1,6 @@
-package com.dawhey.challenge.model;
+package com.dawhey.challenge.web.response;
 
-import com.dawhey.challenge.util.ScraperDocument;
+import com.dawhey.challenge.web.parser.ScraperDocument;
 import lombok.AllArgsConstructor;
 
 import java.util.Map;

@@ -1,12 +1,12 @@
 package com.dawhey.challenge.unit.step;
 
-import com.dawhey.challenge.client.MilleniumWebPageClient;
-import com.dawhey.challenge.model.Response;
-import com.dawhey.challenge.request.PasswordRequest;
 import com.dawhey.challenge.step.PasswordRequestStep;
 import com.dawhey.challenge.step.output.MulticodeRequestStepOutput;
 import com.dawhey.challenge.step.output.Session;
-import com.dawhey.challenge.util.ScraperDocument;
+import com.dawhey.challenge.web.client.MilleniumWebPageClient;
+import com.dawhey.challenge.web.parser.ScraperDocument;
+import com.dawhey.challenge.web.request.PasswordRequestPayload;
+import com.dawhey.challenge.web.response.Response;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -128,22 +128,24 @@ class PasswordRequestStepTest {
     @Test
     public void shouldBuildCorrectPasswordRequest_whenExecuted() {
         //given
-        var requestCaptor = ArgumentCaptor.forClass(PasswordRequest.class);
+        var payloadCaptor = ArgumentCaptor.forClass(PasswordRequestPayload.class);
+        var cookiesCaptor = ArgumentCaptor.forClass(Map.class);
         var previousResponseStub = new Response(multicodeCookies(), new ScraperDocument(Jsoup.parse(PASSWORD_STEP_HTML)));
 
         //when
         underTest.execute(new MulticodeRequestStepOutput(previousResponseStub), new Session(welcomePageCookies()), PESEL, PASSWORD);
 
         //then
-        verify(milleniumWebPageClient).performPasswordRequest(requestCaptor.capture());
-        var request = requestCaptor.getValue();
+        verify(milleniumWebPageClient).performPasswordRequest(payloadCaptor.capture(), cookiesCaptor.capture());
+        var payload = payloadCaptor.getValue();
+        var cookies = cookiesCaptor.getValue();
 
-        assertEquals(REQUEST_VERIFICATION_TOKEN, request.requestVerificationToken);
-        assertEquals(BOT_DETECTION_CLIENT_TOKEN, request.botDetectionClientToken);
-        assertEquals(SECURITY_DIGITS_LOGIN_CHALLENGE, request.securityDigitsLoginChallengeToken);
-        assertEquals(welcomePageCookies(), request.cookies);
-        assertEquals(PASSWORD, request.password);
-        assertEquals(peselFormData(), request.peselFormData);
+        assertEquals(REQUEST_VERIFICATION_TOKEN, payload.requestVerificationToken);
+        assertEquals(BOT_DETECTION_CLIENT_TOKEN, payload.botDetectionClientToken);
+        assertEquals(SECURITY_DIGITS_LOGIN_CHALLENGE, payload.securityDigitsLoginChallengeToken);
+        assertEquals(PASSWORD, payload.password);
+        assertEquals(peselFormData(), payload.peselFormData);
+        assertEquals(welcomePageCookies(), cookies);
     }
 
     private static Map<String, String> peselFormData() {

@@ -1,8 +1,9 @@
 package com.dawhey.challenge.integration.client;
 
-import com.dawhey.challenge.client.MilleniumWebPageClient;
-import com.dawhey.challenge.request.MulticodeRequest;
-import com.dawhey.challenge.request.PasswordRequest;
+import com.dawhey.challenge.web.client.MilleniumWebPageClient;
+import com.dawhey.challenge.web.request.MulticodeRequestPayload;
+import com.dawhey.challenge.web.request.PasswordRequestPayload;
+import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,19 +26,20 @@ class MilleniumWebPageClientTest {
 
     @Test
     public void shouldFetchAndParseResponseDocument_whenPostingMillekod() {
-        var response = underTest.performMultiCodeRequest(new MulticodeRequest(new HashMap<>(), "some-verification-token", "some-millekod".toCharArray()));
+        var response = underTest.performMultiCodeRequest(new MulticodeRequestPayload("some-verification-token", "some-millekod".toCharArray()), new HashMap<>());
         assertNotNull(response.document);
     }
 
     @Test
     public void shouldFetchAndParseResponseDocument_whenPostingPassword() {
-        var response = underTest.performPasswordRequest(new PasswordRequest(
+        var peselFormData = new HashMap<String, String>();
+        var response = underTest.performPasswordRequest(new PasswordRequestPayload(
                 new HashMap<>(),
                 "some-verification-token",
                 "some-bot-detection-token",
                 "some-security-digits-token",
-                new HashMap<>(),
-                "some-password".toCharArray()));
+                "some-password".toCharArray(),
+                String.join(Strings.EMPTY, peselFormData.values())), new HashMap<>());
 
         assertNotNull(response.document);
     }

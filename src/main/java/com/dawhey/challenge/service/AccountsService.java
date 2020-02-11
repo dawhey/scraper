@@ -1,9 +1,9 @@
 package com.dawhey.challenge.service;
 
-import com.dawhey.challenge.client.MilleniumWebPageClient;
 import com.dawhey.challenge.model.Account;
 import com.dawhey.challenge.step.output.Session;
-import com.dawhey.challenge.util.ScraperDocument;
+import com.dawhey.challenge.web.client.MilleniumWebPageClient;
+import com.dawhey.challenge.web.parser.ScraperDocument;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 

@@ -1,10 +1,10 @@
 package com.dawhey.challenge.unit.service;
 
-import com.dawhey.challenge.client.MilleniumWebPageClient;
-import com.dawhey.challenge.model.Response;
 import com.dawhey.challenge.service.AccountsService;
 import com.dawhey.challenge.step.output.Session;
-import com.dawhey.challenge.util.ScraperDocument;
+import com.dawhey.challenge.web.client.MilleniumWebPageClient;
+import com.dawhey.challenge.web.parser.ScraperDocument;
+import com.dawhey.challenge.web.response.Response;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
